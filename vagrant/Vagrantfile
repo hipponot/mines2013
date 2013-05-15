@@ -16,7 +16,7 @@ Vagrant::Config.run do |config|
   # Boot with a GUI so you can see the screen. (Default is headless)
   # config.vm.boot_mode = :gui
   # config.vm.forward_port 80, 8080
-  # config.vm.forward_port 9393, 9394
+  config.vm.forward_port 9393, 9393
 
   # Share an additional folder to the guest VM. The first argument is
   # an identifier, the second is the path on the guest to mount the
