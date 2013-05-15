@@ -14,7 +14,7 @@ Install vagrant and virtualbox from the HOST-os appropriate packages. To host yo
 
 ```
   # provision development VM
-  cd vagrant/woot_api
+  cd mines2013/vagrant
   vagrant up
 ```
 
@@ -30,7 +30,7 @@ You can also log in via standard ssh - password is vagrant
 ssh vagrant@10.0.1.xxx
 ```
 
-Kudu is checkout out from github.  Checkout the Kudo repo README to learn how to generate a project.
+Kudu is checked out from github.  Checkout the Kudo repo README to learn how to generate a project.
 
 ```
 ~/dev/kudu
