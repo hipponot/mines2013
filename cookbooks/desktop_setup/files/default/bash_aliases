@@ -1,0 +1,5 @@
+function lm() { ( find $1 -prune -printf '%m\n')}
+function ee() { (subl "$1")}
+alias go='source ~/bin/go.sh'
+alias clr='find ./ -name "*~" -delete -o -name "*#*" -delete'
+function rif() { ruby -pi -e "gsub(/$1/, '$2')" $3 }

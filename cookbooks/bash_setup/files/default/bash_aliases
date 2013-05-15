@@ -1,0 +1,6 @@
+function lm() { ( find $1 -prune -printf '%m\n')}
+function ee() { (subl "$1")}
+function find_cp() { (find ./ -name $1 | cpio -pd $2) }
+alias go='source ~/bin/go.sh'
+alias clr='find ./ -name "*~" -delete -o -name "*#*" -delete'
+
