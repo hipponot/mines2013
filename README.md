@@ -18,7 +18,7 @@ Install vagrant and virtualbox from the HOST-os appropriate packages. To host yo
   vagrant up
 ```
 
-To login to the vagrant box type the below from the machine root (directory that contains the Vagrant file)
+To login to the vagrant box type the below from the machine root (directory that contains the Vagrantfile)
 
 ```
 vagrant ssh
