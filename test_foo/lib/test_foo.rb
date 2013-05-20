@@ -5,7 +5,7 @@ module Test
   module Foo 
     class Service < Sinatra::Base
       get '/' do
-        "Hello World"
+        "<form action=\"/dbupdate\" method=\"get\"><input type=\"text\" name=\"something\"><input type=\"submit\" value=\"submit\"></form>"
       end
       get '/hello' do
         cache_control :max_age => 0
@@ -16,6 +16,10 @@ module Test
           "service" => "Foo"
         })
       end
+      get '/dbupdate' do
+        
+      end
+
     end
   end
 end
