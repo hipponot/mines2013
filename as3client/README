@@ -1,0 +1,31 @@
+#-----------------------------------
+# Required SDKs:
+#-----------------------------------
+Adobe AIR SDK: http://www.adobe.com/devnet/air/air-sdk-download.html‎
+
+For Android usage:
+Android SDK: http://developer.android.com/sdk/‎
+
+#-----------------------------------
+# Required environment variables:
+#-----------------------------------
+
+$AIR_HOME -> points to installed AIR SDK 3.6
+$ANDROID_SDK -> points to installed Android SDK
+
+#-----------------------------------
+# Common commands:
+#-----------------------------------
+
+# Compile for web
+#  - can access at file://.../as3client/index.html
+#  - to see log output, requires http://.../as3client/index.html
+./builderoo.rb -compile -config debug
+view index.html in browser
+
+# Compile .apk for android
+./builderoo.rb -compile -config debug -package
+
+# Compile .apk for android, install, and watch log output (via adb)
+./builderoo.rb -compile -config debug -package -install -trace
+
