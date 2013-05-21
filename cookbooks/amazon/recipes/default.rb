@@ -1,1 +1,1 @@
-package "aws-sdk"
+gem_package "aws-sdk"
