@@ -1,0 +1,7 @@
+require 'mkmf_rice'
+
+extension_name = 'ocr'
+
+dir_config(extension_name)
+
+create_makefile(extension_name)
