@@ -10,7 +10,7 @@ class AwsInstance
     @s3 = AWS::S3.new(
       :access_key_id => 'secrets',
       :secret_access_key => 'secret_key',
-      :s3_endpoint => 'localhost',
+      :s3_endpoint => 's3.amazonaws.com',
       :s3_port => 10001,
       :use_ssl => false)
     puts "created the s3 instance"

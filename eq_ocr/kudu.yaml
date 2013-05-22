@@ -1,0 +1,20 @@
+---
+:project:
+ :name: eq_ocr
+ :type: sinatra
+:publications:
+- :name: eq_ocr
+  :version: 0.0.1
+  :group: in-house
+  :type: gem
+:dependencies: 
+- :name: sinatra
+  :group: third-party
+  :type: gem
+- :name: json
+  :group: third-party
+  :type: gem
+- :name: shotgun
+  :group: developer
+  :type: gem
+...
