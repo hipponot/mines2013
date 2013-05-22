@@ -23,6 +23,14 @@ module Test
       end
 
       post '/upload_bitmap' do
+
+        #Putting mongo things here
+        mongo_client = MongoClient.new("localhost", 27017)
+        db = mongo_client.db("mydb")
+        coll = db["testCollection"]
+        doc = {"name" => "MongoDB","type" => "database", "count" => 1}
+        #end mongo things
+
         puts "I got the message"
         puts "It was: #{params[:data]}"
         # request.body.read
