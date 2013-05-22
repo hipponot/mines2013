@@ -1,4 +1,4 @@
-require 'mkmf_rice'
+require 'mkmf'
 
 extension_name = 'ocr'
 
