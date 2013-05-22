@@ -33,12 +33,14 @@ module Test
         #end mongo things
 
         puts "I got the message"
-        puts "It was: #{params[:data]}"
         # request.body.read
-
+        new_request = request.body.read.split("[")
+        puts new_request
         File.open('/tmp/file_1', 'wb') { |f| f.write(request.body.read)}
         status 200
+        body "1"
       end
+
       get '/loadprompt' do
         erb :loader
       end
@@ -56,7 +58,7 @@ module Test
         File.open('/tmp/'+name, "wb") { |f| f.write(upfile.read) }
         "SUCCESS"
       end
-      
+
       get '/loadfile' do
         file_name = params['filename']
         ## aws api to server

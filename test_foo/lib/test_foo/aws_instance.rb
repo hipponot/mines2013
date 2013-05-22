@@ -5,6 +5,7 @@ require "aws-sdk"
 require "aws-sdk"
 class AwsInstance
 
+
 #   include AWS::S3
 
   def initialize

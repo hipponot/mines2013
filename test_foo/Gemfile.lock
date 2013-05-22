@@ -3,6 +3,8 @@ PATH
   specs:
     test_foo (0.0.1)
       aws-sdk
+      aws-sdk
+      fakes3
       json
       shotgun
       sinatra

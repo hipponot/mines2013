@@ -20,4 +20,10 @@
 - :name: shotgun
   :group: developer
   :type: gem
+- :name: aws-sdk
+  :group: third-party
+  :type: gem
+- :name: fakes3
+  :group: third-party
+  :type: gem
 ...
