@@ -27,7 +27,33 @@ module Test
         puts "It was: #{params[:data]}"
         puts "Or maybe it was #{request.body.read}"
       end
-
+      get '/loadprompt' do
+        erb :loader
+      end
+      get '/saveprompt' do
+        erb :saver
+      end
+      post '/savefile' do
+        # verify appropriate bucket
+        # save file
+        # return save status
+        name = params['upfile'][:filename]
+        upfile = params['upfile'][:tempfile]
+        File.open('/tmp/'+name, "wb") { |f| f.write(upfile.read) }
+        "SUCCESS"
+      end
+      get '/loadfile' do
+        file_name = params['filename']
+        ## aws api to server
+        # check for file existance
+        # load file
+        # return file object
+        if !File.exists?('/tmp/'+file_name)
+          "Error Loading File"
+        else
+          file = File.open('/tmp/'+file_name, "r")
+        end
+      end
     end
   end
 end
