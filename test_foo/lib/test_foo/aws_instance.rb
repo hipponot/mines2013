@@ -4,6 +4,7 @@ require "fakes3"
 require "aws/s3"
 
 class AwsInstance
+
   # include AWS::S3
 
   def initialize
