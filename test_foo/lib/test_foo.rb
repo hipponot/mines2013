@@ -11,32 +11,24 @@ module Test
         "<form action=\"/upload_bitmap\" method=\"post\"><input type=\"text\" name=\"something\"><input type=\"submit\" value=\"submit\"></form>"
         # File.read("../lib/index.html")
       end
-      
-      get '/hello' do
-        cache_control :max_age => 0
-        puts "#{Time.now} Kudu: Hello!"
-        status 200
-        body JSON.pretty_generate({
-          "status" => "success",
-          "service" => "Foo"
-          })
-      end
 
       post '/upload_bitmap' do
 
         #Putting mongo things here
-        mongo_client = MongoClient.new("localhost", 27017)
-        db = mongo_client.db("mydb")
-        coll = db["testCollection"]
-        doc = {"name" => "MongoDB","type" => "database", "count" => 1}
-        id = coll.insert(doc)
+        # mongo_client = MongoClient.new("localhost", 27017)
+        # db = mongo_client.db("mydb")
+        # coll = db["testCollection"]
+        # doc = {"name" => "MongoDB","type" => "database", "count" => 1}
+        # id = coll.insert(doc)
         #end mongo things
 
         puts "I got the message"
         # request.body.read
         new_request = request.body.read.split("[")
-        puts new_request
+        # puts new_request
+        s3 = AwsInstance.new
         File.open('/tmp/file_1', 'wb') { |f| f.write(request.body.read)}
+        s3.upload_file('/tmp/file_1')
         status 200
         body "1"
       end
