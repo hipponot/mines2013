@@ -51,8 +51,9 @@ class AwsInstance
 
   def upload_file file
     puts "uploading file"
-    S3Object.store("test_file", file, @bucket_name)
-
+    S3Object.store("test_file.txt", open(file), @bucket_name)
+    b = Bucket.find('handwriting')
+    puts b["test_file"]
   end
 
 

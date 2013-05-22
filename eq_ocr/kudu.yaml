@@ -17,4 +17,10 @@
 - :name: shotgun
   :group: developer
   :type: gem
+- :name: fakes3
+  :group: third-party
+  :type: gem
+- :name: aws-s3
+  :group: third-party
+  :type: gem
 ...
