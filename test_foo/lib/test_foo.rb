@@ -26,6 +26,7 @@ module Test
         puts "I got the message"
         puts "It was: #{params[:data]}"
         puts "Or maybe it was #{request.body.read}"
+        status 200
       end
       get '/loadprompt' do
         erb :loader
