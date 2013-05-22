@@ -25,24 +25,29 @@ module Test
       post '/upload_bitmap' do
         puts "I got the message"
         puts "It was: #{params[:data]}"
-        puts "Or maybe it was #{request.body.read}"
+        # request.body.read
+
+        File.open('/tmp/file_1', 'wb') { |f| f.write(request.body.read)}
         status 200
       end
       get '/loadprompt' do
         erb :loader
       end
+
       get '/saveprompt' do
         erb :saver
       end
+      
       post '/savefile' do
         # verify appropriate bucket
         # save file
         # return save status
-        name = params['upfile'][:filename]
-        upfile = params['upfile'][:tempfile]
+        name = params[:upfile][:filename]
+        upfile = params[:upfile][:tempfile]
         File.open('/tmp/'+name, "wb") { |f| f.write(upfile.read) }
         "SUCCESS"
       end
+      
       get '/loadfile' do
         file_name = params['filename']
         ## aws api to server
