@@ -28,6 +28,4 @@ Gem::Specification.new do |gem|
   rescue
     abort("Error parsing kudu.yaml")
   end
-  gem.add_dependency "aws-sdk"
-  gem.add_development_dependency "fakes3"
 end

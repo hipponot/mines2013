@@ -14,6 +14,9 @@
 - :name: json
   :group: third-party
   :type: gem
+- :name: aws-sdk
+  :group: third-party
+  :type: gem
 - :name: shotgun
   :group: developer
   :type: gem

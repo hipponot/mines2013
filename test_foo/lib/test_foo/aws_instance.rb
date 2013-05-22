@@ -1,10 +1,11 @@
 require 'rubygems'
 require "aws-sdk"
-require "fakes3"
-require "aws/s3"
-
+#require "fakes3"
+#require "aws/s3"
+require "aws-sdk"
 class AwsInstance
-  # include AWS::S3
+
+#   include AWS::S3
 
   def initialize
     AWS::S3::Base.establish_connection!(:access_key_id => "123",
