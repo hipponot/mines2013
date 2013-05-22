@@ -29,6 +29,7 @@ module Test
         db = mongo_client.db("mydb")
         coll = db["testCollection"]
         doc = {"name" => "MongoDB","type" => "database", "count" => 1}
+        id = coll.insert(doc)
         #end mongo things
 
         puts "I got the message"
