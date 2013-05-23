@@ -2,7 +2,10 @@ require "sinatra/base"
 require "json"
 require "eq_ocr/version"
 require 'eq_ocr/aws_instance'
+require 'mongo'
 # require "eq_ocr/eq_ocr"
+
+include Mongo
 
 module Eq
   module Ocr 
@@ -60,6 +63,25 @@ module Eq
         else
           file = File.open('/tmp/'+file_name, "r")
         end
+
+      post '/dbupdate' do
+        new_request = request.body.read
+
+        @client = MongoClient.new('localhost', 27017)
+        @db     = @client['sample-db']
+        @coll   = @db['test']
+
+        @coll.remove
+
+        3.times do |i|
+          @coll.insert({'a' => i+1})
+        end
+
+        puts "There are #{@coll.count} records. Here they are:"
+        @coll.find.each { |doc| puts doc.inspect }
+
+      end  
+
       end
     end
   end
