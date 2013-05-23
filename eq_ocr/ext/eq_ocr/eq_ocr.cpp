@@ -1,6 +1,8 @@
 #include "rice/Class.hpp"
 #include "rice/String.hpp"
+
 using namespace Rice;
+
 int recognize_char(Object bmp /* self */)
 {
   //String str("hello, world - from C++ extension");
