@@ -42,7 +42,6 @@ Vagrant::Config.run do |config|
       'emacs' => {'packages' => ['emacs'] }
      }
     chef.add_recipe "amazon"
-    chef.add_recipe "rice"
    end
   
 end

@@ -2,7 +2,7 @@ require "sinatra/base"
 require "json"
 require "eq_ocr/version"
 require 'eq_ocr/aws_instance'
-# require "eq_ocr/eq_ocr"
+require "eq_ocr/eq_ocr"
 
 module Eq
   module Ocr 
@@ -22,7 +22,6 @@ module Eq
         #end mongo things
 
         new_request = request.body.read.split("[")
-
         s3 = AwsInstance.new
         File.open('/tmp/file_1', 'wb') { |f| f.write(request.body.read)}
         s3.upload_file('/tmp/file_1')
