@@ -1,18 +1,20 @@
 package
 {
 	import flash.display.BitmapData;
+	import flash.display.PNGEncoderOptions;
+	import flash.events.Event;
+	import flash.events.HTTPStatusEvent;
 	import flash.events.IOErrorEvent;
+	import flash.geom.Rectangle;
 	import flash.net.URLLoader;
 	import flash.net.URLLoaderDataFormat;
 	import flash.net.URLRequest;
 	import flash.net.URLRequestHeader;
 	import flash.net.URLRequestMethod;
 	import flash.net.navigateToURL;
-	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
-	import flash.events.*;
+	
 	import mx.graphics.codec.PNGEncoder;
-	import flash.display.PNGEncoderOptions;
 	
 	public class ServerComm
 	{
@@ -39,6 +41,7 @@ package
 			loader.removeEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
 			_response_status = "200";
 			_response_body = loader.data;
+			Main.status.text = " Response was: " + _response_status + " Body was: " + _response_body;
 		}
 		
 		/**
@@ -91,9 +94,13 @@ package
 			loader.dataFormat = URLLoaderDataFormat.BINARY;
 			loader.load(url_request);
 			
-			Main.status.text = "Information sent: " + bytes.length + " Response was: " + _response_status + " Body was: " + _response_body;
+			
+			Main.status.text = "Information sent: " + bytes.length;
 			//navigateToURL(new URLRequest("http://localhost:9393/upload_bitmap"));
 		}
 		
 	}
 }
+import flash.events.Event;
+import flash.events.HTTPStatusEvent;
+
