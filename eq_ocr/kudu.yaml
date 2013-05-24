@@ -26,4 +26,7 @@
 - :name: mongo
   :group: third-party
   :type: gem  
+- :name: rice
+  :group: third-party
+  :type: gem  
 ...
