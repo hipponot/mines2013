@@ -1,13 +1,15 @@
 #include "rice/Class.hpp"
 #include "rice/String.hpp"
+
 using namespace Rice;
-int test_hello(Object bmp /* self */)
+
+int recognize_char(Object bmp /* self */)
 {
   //String str("hello, world - from C++ extension");
   return (rand() % 2);
 }
 extern "C"
-void Init_test_blah()
+void Init_eq_ocr()
 {
-  Class rb_cTest = define_class("BlahExt").define_method("hello", &test_hello);
+  Class rb_cTest = define_class("OcrExt").define_method("recognize_char", &recognize_char);
 }

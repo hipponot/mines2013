@@ -2,7 +2,9 @@ require "sinatra/base"
 require "json"
 require "eq_ocr/version"
 require 'eq_ocr/aws_instance'
-# require "eq_ocr/eq_ocr"
+require 'mongo'
+require "eq_ocr/eq_ocr"
+include Mongo
 
 module Eq
   module Ocr 
@@ -20,12 +22,11 @@ module Eq
         # doc = {"name" => "MongoDB","type" => "database", "count" => 1}
         # id = coll.insert(doc)
         #end mongo things
-
         new_request = request.body.read.split("[")
 
-        s3 = AwsInstance.new
+        #s3 = AwsInstance.new
         File.open('/tmp/file_1', 'wb') { |f| f.write(request.body.read)}
-        s3.upload_file('/tmp/file_1')
+        #s3.upload_file('/tmp/file_1')
 
         status 200
         body "1"
@@ -60,6 +61,27 @@ module Eq
         else
           file = File.open('/tmp/'+file_name, "r")
         end
+      end 
+
+      post '/db_update' do
+        new_request = request.body.read
+
+         @client = MongoClient.new('127.0.0.1', 27017)
+         @db     = @client['sample-db']
+         @coll   = @db['test']
+
+         @coll.remove
+
+         3.times do |i|
+          @coll.insert({'a' => i+1})
+         end
+
+         puts "There are #{@coll.count} records. Here they are:"
+         @coll.find.each { |doc| puts doc.inspect }
+          
+        status 200
+        ocr = OcrExt.new
+        body "#{ocr.recognize_char}"
       end
     end
   end

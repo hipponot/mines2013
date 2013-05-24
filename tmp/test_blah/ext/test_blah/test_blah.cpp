@@ -4,8 +4,8 @@
 using namespace Rice;
 int test_hello(Object bmp /* self */)
 {
-  //String str("hello, world - from C++ extension");
-  return (rand() % 2);
+	//String str("hello, world - from C++ extension");
+	return (rand() % 2);
 }
 extern "C"
 void Init_test_blah()
