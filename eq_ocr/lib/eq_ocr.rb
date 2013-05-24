@@ -4,15 +4,14 @@ require "eq_ocr/version"
 require 'eq_ocr/aws_instance'
 require 'mongo'
 require "eq_ocr/eq_ocr"
-include Mongo
 
 module Eq
   module Ocr 
     class Service < Sinatra::Base
+      include Mongo
       get '/' do
         "<form action=\"/upload_bitmap\" method=\"post\"><input type=\"text\" name=\"something\"><input type=\"submit\" value=\"submit\"></form>"
       end
-
 
       post '/ocr' do
         upload_bitmap
@@ -36,7 +35,7 @@ module Eq
         def db_update
           new_request = request.body.read
 
-          @client = MongoClient.new('127.0.0.1', 27017)
+          @client = MongoClient.new('localhost', 27017)
           @db     = @client['sample-db']
           @coll   = @db['test']
 
