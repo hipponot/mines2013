@@ -23,4 +23,7 @@
 - :name: aws-s3
   :group: third-party
   :type: gem
+- :name: mongo
+  :group: third-party
+  :type: gem  
 ...
