@@ -1,5 +1,0 @@
-
-#To Debug Provisioning with CHEF SOLO - do something like the below
-vagrant ssh
-sudo chef-solo -c /tmp/vagrant-chef-1/solo.rb -j /tmp/vagrant-chef-1/dna.json -l debug
-

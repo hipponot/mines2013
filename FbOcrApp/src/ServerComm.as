@@ -11,6 +11,7 @@ package
 	import flash.net.URLRequest;
 	import flash.net.URLRequestHeader;
 	import flash.net.URLRequestMethod;
+	import flash.net.URLVariables;
 	import flash.net.navigateToURL;
 	import flash.utils.ByteArray;
 	
@@ -21,6 +22,7 @@ package
 		private var _host:String;
 		private var _response_status:String;
 		private var _response_body:String;
+		
 		public function ServerComm(host:String):void
 		{
 			_host = host;      
@@ -70,21 +72,26 @@ package
 			
 			// Send binary bytes: png_length + png_bytes + json string
 			// See: http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/utils/ByteArray.html
-			var bytes:ByteArray = new ByteArray();
-			bytes.endian = "bigEndian";
-			bytes.writeInt(png_bytes.length);
-			bytes.writeBytes(png_bytes, 0, png_bytes.length);
-			bytes.writeMultiByte(strokes_json, "utf-8");
+//			var bytes:ByteArray = new ByteArray();
+//			bytes.endian = "bigEndian";
+//			bytes.writeInt(png_bytes.length);
+//			bytes.writeBytes(png_bytes, 0, png_bytes.length);
+//			bytes.writeMultiByte(strokes_json, "utf-8");
 			
-			log("Sending " + bytes.length + " bytes...");
+			log("Sending " + png_bytes.length + "bmp bytes...");
+			log("Sending " + strokes_json.length + " strokes bytes");
 			
-			Main.status.text = "Send " + bytes.length + ", response=???";
+			Main.status.text = "Send " + png_bytes.length + ", response=???";
 			
 			var url_request:URLRequest = new URLRequest();
-			url_request.url = "http://localhost:9393/db_update";
+			var url_params:URLVariables = new URLVariables();
+			url_params.bmp = png_bytes;
+			url_params.json = strokes_json
+			url_request.url = "http://localhost:9393/ocr";
 			url_request.contentType = "binary/octet-stream";
 			url_request.method = URLRequestMethod.POST;
-			url_request.data = bytes;
+			
+			url_request.data = url_params;
 			url_request.requestHeaders.push(
 				new URLRequestHeader('Cache-Control', 'no-cache'));
 			
@@ -95,7 +102,7 @@ package
 			loader.load(url_request);
 			
 			
-			Main.status.text = "Information sent: " + bytes.length;
+			Main.status.text = "Information sent: " + png_bytes.length + strokes_json.length; 
 			//navigateToURL(new URLRequest("http://localhost:9393/upload_bitmap"));
 		}
 		

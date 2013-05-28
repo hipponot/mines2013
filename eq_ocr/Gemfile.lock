@@ -5,6 +5,8 @@ PATH
       aws-s3
       fakes3
       json
+      mongo
+      rice
       shotgun
       sinatra
 
@@ -15,15 +17,19 @@ GEM
       builder
       mime-types
       xml-simple
+    bson (1.8.6)
     builder (3.2.0)
     fakes3 (0.1.5)
       builder
       thor
-    json (1.5.5)
+    json (1.8.0)
     mime-types (1.23)
+    mongo (1.8.6)
+      bson (~> 1.8.6)
     rack (1.5.2)
     rack-protection (1.5.0)
       rack
+    rice (1.5.1)
     shotgun (0.9)
       rack (>= 1.0)
     sinatra (1.4.2)

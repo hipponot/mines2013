@@ -12,7 +12,7 @@ Vagrant::Config.run do |config|
   # the url from where the 'config.vm.box' box will be fetched if it
   # doesn't already exist on the user's system.
   config.vm.box_url = "http://files.vagrantup.com/precise32.box"  
-  config.vm.share_folder "mines2013", "/home/vagrant/mines2013", "../../mines2013"
+  # config.vm.share_folder "mines2013", "/home/vagrant/mines2013", "../../mines2013"
   
   # Boot with a GUI so you can see the screen. (Default is headless)
   # config.vm.boot_mode = :gui
@@ -30,7 +30,7 @@ Vagrant::Config.run do |config|
   # some recipes and/or roles.
   #
    config.vm.provision :chef_solo, :log_level=>:debug do |chef|
-    chef.cookbooks_path = "../cookbooks"
+    # chef.cookbooks_path = "../cookbooks"
     chef.add_recipe "apt"
     chef.add_recipe "emacs"
     chef.add_recipe "woot_api::default"

@@ -14,11 +14,18 @@ module Eq
       end
 
       post '/ocr' do
+        split_json request.body.read
         upload_bitmap
         db_update
       end
 
       helpers do
+
+        def split_json message
+          puts message.unpack('H*')
+          puts "There should be a message above"
+
+        end
 
         def upload_bitmap
 
