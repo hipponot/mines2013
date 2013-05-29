@@ -12,12 +12,10 @@ package
 	import flash.net.URLRequestHeader;
 	import flash.net.URLRequestMethod;
 	import flash.net.URLVariables;
-	import flash.net.navigateToURL;
 	import flash.utils.ByteArray;
+	
+	import mx.utils.Base64Decoder;
 	import mx.utils.Base64Encoder;
-	
-	
-	import mx.graphics.codec.PNGEncoder;
 	
 	public class ServerComm
 	{
@@ -44,6 +42,17 @@ package
 			_response_status = "200";
 			_response_body = loader.data;
 			Main.status.text = " Response was: " + _response_status + " Body was: " + _response_body;
+		}
+		
+		private function retrieveDataSuccessHandler(event:Event):void {
+			var loader:URLLoader = event.target as URLLoader;
+			loader.removeEventListener(Event.COMPLETE, successHandler);
+			loader.removeEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
+			_response_status = "200";
+			_response_body = loader.data;
+			decode_data(_response_body);
+
+//			Main.status.text = " Response was: " + _response_status + " Body was: " + _response_body + " Decoded string was: " + _decoded_body;
 		}
 		
 		/**
@@ -102,6 +111,27 @@ package
 			//navigateToURL(new URLRequest("http://localhost:9393/upload_bitmap"));
 		}
 		
+		public function load_data():void
+		{
+			// TODO Auto Generated method stub
+			var url_request:URLRequest = new URLRequest();
+			url_request.url = "http://localhost:9393/request_bmp";
+			url_request.method = URLRequestMethod.GET;
+			var loader:URLLoader = new URLLoader();
+			loader.addEventListener(Event.COMPLETE, retrieveDataSuccessHandler);
+			loader.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
+			loader.dataFormat = URLLoaderDataFormat.TEXT;
+			loader.load(url_request);	
+		}
+		
+		public function decode_data(response:String):void
+		{
+			var _decoded_body:String = new String();
+			_decoded_body = response;
+			var dec:Base64Decoder = new Base64Decoder();
+			dec.decode(_decoded_body);
+			log("the decoded string is: " + dec.drain());
+		}
 	}
 }
 import flash.events.Event;

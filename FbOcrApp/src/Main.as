@@ -68,6 +68,23 @@ package
 			btn.mouseChildren = false;
 			btn.addEventListener(MouseEvent.MOUSE_DOWN, handle_clear);
 			
+			btn = new Sprite();
+			t = new TextField();
+			t.text = "Load";
+			t.width = 40;
+			t.height = 19;
+			t.scaleX = t.scaleY = 2.5;
+			t.selectable = false;
+			btn.addChild(t);
+			addChild(btn);
+			btn.graphics.beginFill(0xaab2ff);
+			btn.graphics.drawRoundRect(0,0,t.width,t.height,5);
+			btn.x = _draw_layer.x + Const.WIDTH/2 - t.width/2;
+			btn.y = _draw_layer.y + Const.HEIGHT + 2;
+			btn.mouseEnabled = true;
+			btn.mouseChildren = false;
+			btn.addEventListener(MouseEvent.MOUSE_DOWN, handle_load);
+			
 			status = new TextField();
 			status.width = Const.WIDTH;
 			status.y = btn.y + btn.height;
@@ -88,5 +105,10 @@ package
 			_draw_layer.clear();
 		}
 		
+		private function handle_load(e:MouseEvent):void
+		{
+			log("load");
+			_server_comm.load_data();
+		}
 	}
 }

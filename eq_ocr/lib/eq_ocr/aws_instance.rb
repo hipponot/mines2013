@@ -46,7 +46,9 @@ class AwsInstance
       :port => "10001")
     
     puts "creating bucket"
-    Bucket.create(@bucket_name)
+    if !Bucket.create(@bucket_name)
+      Bucket.find(@bucket_name)
+    end
   end
 
   def upload_file file
@@ -56,5 +58,10 @@ class AwsInstance
     puts b["test_file"]
   end
 
+  def get_file file_name="test_file"
+    puts "retrieving file"
+    file = S3Object.find file_name, @bucket_name
+    file.value
+  end
 
 end

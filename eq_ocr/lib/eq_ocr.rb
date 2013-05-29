@@ -21,14 +21,13 @@ module Eq
         body "file written to S3 storage and json written to database"
       end
 
+      get '/request_bmp' do
+        puts "hello"
+        s3 = AwsInstance.new
+        s3.get_file 
+      end
+
       helpers do
-
-        def split_json message
-          puts message.unpack('H*')
-          puts "There should be a message above"
-
-        end
-
         def upload_bitmap params
 
           puts "BMP encoded data: #{params[:bmp]}"
@@ -40,27 +39,23 @@ module Eq
         end
         
         def db_update
-          new_request = request.body.read
-
           @client = MongoClient.new('localhost', 27017)
-          @db     = @client['sample-db']
+          @db     = @client['json-db']
           @coll   = @db['test']
 
           @coll.remove
 
-          3.times do |i|
-           @coll.insert({'a' => i+1})
-          end
+          # 3.times do |i|
+          #  @coll.insert({'a' => i+1})
+          # end
+
+          @coll.insert({'json' => params[:json]})
 
           puts "There are #{@coll.count} records. Here they are:"
           @coll.find.each { |doc| puts doc.inspect }
             
-          status 200
-          ocr = OcrExt.new
-          body "nothing"
-          puts eval("2+2")
-          body "ndfd"
-      
+          # ocr = OcrExt.new
+          # puts eval("2+2")
         end
       end
     end
