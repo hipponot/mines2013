@@ -14,9 +14,11 @@ module Eq
       end
 
       post '/ocr' do
-        split_json request.body.read
-        upload_bitmap
+        # split_json request.body.read
+        upload_bitmap params
         db_update
+        status 200
+        body "file written to S3 storage and json written to database"
       end
 
       helpers do
@@ -27,16 +29,14 @@ module Eq
 
         end
 
-        def upload_bitmap
+        def upload_bitmap params
 
-          # new_request = request.body.read.split("[")
+          puts "BMP encoded data: #{params[:bmp]}"
+          puts "JSON data: #{params[:json]}"
 
           s3 = AwsInstance.new
-          File.open('/tmp/file_1', 'wb') { |f| f.write(request.body.read)}
+          File.open('/tmp/file_1', 'wb') { |f| f.write(params[:bmp])}
           s3.upload_file('/tmp/file_1')
-
-          #status 200
-          #body "1"
         end
         
         def db_update
