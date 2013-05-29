@@ -35,8 +35,8 @@ module Eq
           File.open('/tmp/file_1', 'wb') { |f| f.write(request.body.read)}
           s3.upload_file('/tmp/file_1')
 
-          status 200
-          body "1"
+          #status 200
+          #body "1"
         end
         
         def db_update
@@ -57,9 +57,9 @@ module Eq
             
           status 200
           ocr = OcrExt.new
-          body "#{ocr.recognize_char}"
+          body ocr.recognize_char
+      
         end
-
       end
     end
   end

@@ -61,7 +61,7 @@ localstatedir = $(prefix)/var
 
 sharedstatedir = $(prefix)/com
 
-sysconfdir = $(prefix)/etc
+sysconfdir = $(DESTDIR)/etc
 
 datadir = $(datarootdir)
 
@@ -92,8 +92,8 @@ CC = gcc
 CXX = g++
 LIBRUBY = $(LIBRUBY_SO)
 LIBRUBY_A = lib$(RUBY_SO_NAME)-static.a
-LIBRUBYARG_SHARED = -Wl,-R -Wl,$(libdir) -L$(libdir) -l$(RUBY_SO_NAME)
-LIBRUBYARG_STATIC = -Wl,-R -Wl,/home/vagrant/.rvm/rubies/ruby-1.9.3-p429/lib -L/home/vagrant/.rvm/rubies/ruby-1.9.3-p429/lib -lruby-static
+LIBRUBYARG_SHARED = '-Wl,-rpath,$${ORIGIN}/../lib' -Wl,-R -Wl,$(libdir) -L$(libdir) -l$(RUBY_SO_NAME)
+LIBRUBYARG_STATIC = '-Wl,-rpath,${ORIGIN}/../lib' -Wl,-R -Wl,/home/vagrant/.rvm/rubies/ruby-1.9.3-p429/lib -L/home/vagrant/.rvm/rubies/ruby-1.9.3-p429/lib -lruby-static
 empty =
 OUTFLAG = -o $(empty)
 COUTFLAG = -o $(empty)
@@ -154,7 +154,7 @@ extout =
 extout_prefix = 
 target_prefix = /eq_ocr
 LOCAL_LIBS = 
-LIBS = -Wl,-R -Wl,/home/vagrant/.rvm/rubies/ruby-1.9.3-p429/lib -L/home/vagrant/.rvm/rubies/ruby-1.9.3-p429/lib -lruby -lpthread -lrt -ldl -lcrypt -lm   -lc
+LIBS = '-Wl,-rpath,${ORIGIN}/../lib' -Wl,-R -Wl,/home/vagrant/.rvm/rubies/ruby-1.9.3-p429/lib -L/home/vagrant/.rvm/rubies/ruby-1.9.3-p429/lib -lruby -lpthread -lrt -ldl -lcrypt -lm   -lc
 SRCS = eq_ocr.cpp
 OBJS = eq_ocr.o
 TARGET = eq_ocr

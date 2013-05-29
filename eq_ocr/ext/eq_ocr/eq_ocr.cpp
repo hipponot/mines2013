@@ -3,10 +3,10 @@
 
 using namespace Rice;
 
-int recognize_char(Object bmp /* self */)
+String recognize_char(Object bmp /* self */)
 {
   //String str("hello, world - from C++ extension");
-  return (rand() % 2);
+  return "2+2";
 }
 extern "C"
 void Init_eq_ocr()
