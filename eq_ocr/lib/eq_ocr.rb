@@ -57,7 +57,9 @@ module Eq
             
           status 200
           ocr = OcrExt.new
-          body ocr.recognize_char
+          body "nothing"
+          puts eval("2+2")
+          body "ndfd"
       
         end
       end
