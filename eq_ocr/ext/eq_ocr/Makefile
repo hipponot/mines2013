@@ -106,9 +106,9 @@ warnflags = -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long 
 CFLAGS   = -fPIC $(cflags)  -fPIC $(ARCH_FLAG)
 INCFLAGS = -I. -I$(arch_hdrdir) -I$(hdrdir)/ruby/backward -I$(hdrdir) -I$(srcdir)
 DEFS     = -D_FILE_OFFSET_BITS=64
-CPPFLAGS =   $(DEFS) $(cppflags)  -I/home/vagrant/.rvm/gems/ruby-1.9.3-p429/gems/rice-1.5.1/ruby/lib/include
+CPPFLAGS =   $(DEFS) $(cppflags)  -I/home/vagrant/.rvm/gems/ruby-1.9.3-p429@global/gems/rice-1.5.1/ruby/lib/include
 CXXFLAGS = $(CFLAGS)  -Wall -g
-ldflags  = -L.  -rdynamic -Wl,-export-dynamic  -L/home/vagrant/.rvm/gems/ruby-1.9.3-p429/gems/rice-1.5.1/ruby/lib/lib -lrice
+ldflags  = -L.  -rdynamic -Wl,-export-dynamic  -L/home/vagrant/.rvm/gems/ruby-1.9.3-p429@global/gems/rice-1.5.1/ruby/lib/lib -lrice
 dldflags =  
 ARCH_FLAG = 
 DLDFLAGS = $(ldflags) $(dldflags) $(ARCH_FLAG)
