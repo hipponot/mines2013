@@ -14,6 +14,8 @@ package
 	import flash.net.URLVariables;
 	import flash.net.navigateToURL;
 	import flash.utils.ByteArray;
+	import mx.utils.Base64Encoder;
+	
 	
 	import mx.graphics.codec.PNGEncoder;
 	
@@ -32,14 +34,12 @@ package
 			var loader:URLLoader = event.target as URLLoader;
 			loader.removeEventListener(HTTPStatusEvent.HTTP_RESPONSE_STATUS, successHandler);
 			loader.removeEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
-			trace("error here");
+			trace("error here: " + event.toString());
 		}
 		
 		private function successHandler(event:Event):void {
-			log("this was a success!");
-			//trace("Responded ");
 			var loader:URLLoader = event.target as URLLoader;
-			loader.removeEventListener(HTTPStatusEvent.HTTP_RESPONSE_STATUS, successHandler);
+			loader.removeEventListener(Event.COMPLETE, successHandler);
 			loader.removeEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
 			_response_status = "200";
 			_response_body = loader.data;
@@ -59,36 +59,32 @@ package
 			// Encode bitmapdata as PNG file (requires Flash 11.3+)
 			var png_bytes:ByteArray = new ByteArray();
 			bmp.encode(new Rectangle(0,0,bmp.width,bmp.height), new PNGEncoderOptions(true), png_bytes);
+			var encoder:Base64Encoder = new Base64Encoder();
+			encoder.encodeBytes(png_bytes);
+			var encodedBytes:String = encoder.toString();
+			trace("the byte string is: " + encodedBytes);
 			
-			//var p:PNGEncoder = new PNGEncoder();
-			//var png_bytes:ByteArray = p.encode(bmp);
+//			var p:PNGEncoder = new PNGEncoder();
+//			var png_bytes:ByteArray = p.encode(bmp);
 			log("PNG is "+png_bytes.length+" bytes...");
+			log("JSON is:\n " + strokes_json);
 			
 			// Encode strokes as JSON
 			var strokes_json:String = JSON.stringify(strokes);
 			
-			log("strokes JSON:");
-			log(strokes_json);
-			
-			// Send binary bytes: png_length + png_bytes + json string
-			// See: http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/utils/ByteArray.html
-//			var bytes:ByteArray = new ByteArray();
-//			bytes.endian = "bigEndian";
-//			bytes.writeInt(png_bytes.length);
-//			bytes.writeBytes(png_bytes, 0, png_bytes.length);
-//			bytes.writeMultiByte(strokes_json, "utf-8");
-			
-			log("Sending " + png_bytes.length + "bmp bytes...");
+			log("Sending " + encodedBytes.length + "bmp bytes...");
 			log("Sending " + strokes_json.length + " strokes bytes");
 			
-			Main.status.text = "Send " + png_bytes.length + ", response=???";
+			Main.status.text = "Send " + encodedBytes.length + ", response=???";
 			
 			var url_request:URLRequest = new URLRequest();
 			var url_params:URLVariables = new URLVariables();
-			url_params.bmp = png_bytes;
+			log("Setting url params {bmp} to: " + encodedBytes );
+			url_params.bmp = encodedBytes;
+			log("Setting url params {json} to: " + strokes_json);
 			url_params.json = strokes_json
 			url_request.url = "http://localhost:9393/ocr";
-			url_request.contentType = "binary/octet-stream";
+//			url_request.contentType = "application/octet-stream";
 			url_request.method = URLRequestMethod.POST;
 			
 			url_request.data = url_params;
