@@ -22,7 +22,6 @@ module Eq
       end
 
       get '/request_bmp' do
-        puts "hello"
         s3 = AwsInstance.new
         s3.get_file 
       end

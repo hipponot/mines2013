@@ -61,6 +61,7 @@ class AwsInstance
   def get_file file_name="test_file"
     puts "retrieving file"
     file = S3Object.find file_name, @bucket_name
+    puts "the file's value is: #{file.value}"
     file.value
   end
 

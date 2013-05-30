@@ -1,5 +1,8 @@
 package
 {
+	import com.sociodox.utils.Base64;
+	
+	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.PNGEncoderOptions;
 	import flash.events.Event;
@@ -14,7 +17,7 @@ package
 	import flash.net.URLVariables;
 	import flash.utils.ByteArray;
 	
-	import mx.utils.Base64Decoder;
+	import mx.binding.utils.BindingUtils;
 	import mx.utils.Base64Encoder;
 	
 	public class ServerComm
@@ -30,13 +33,15 @@ package
 		
 		private function ioErrorHandler(event:IOErrorEvent):void {
 			var loader:URLLoader = event.target as URLLoader;
-			loader.removeEventListener(HTTPStatusEvent.HTTP_RESPONSE_STATUS, successHandler);
+			loader.removeEventListener(HTTPStatusEvent.HTTP_STATUS, httpStatusHandler);
+			loader.removeEventListener(Event.COMPLETE, successHandler);
 			loader.removeEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
 			trace("error here: " + event.toString());
 		}
 		
 		private function successHandler(event:Event):void {
 			var loader:URLLoader = event.target as URLLoader;
+			loader.removeEventListener(HTTPStatusEvent.HTTP_STATUS, httpStatusHandler);
 			loader.removeEventListener(Event.COMPLETE, successHandler);
 			loader.removeEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
 			_response_status = "200";
@@ -44,9 +49,15 @@ package
 			Main.status.text = " Response was: " + _response_status + " Body was: " + _response_body;
 		}
 		
+		private function httpStatusHandler(event:HTTPStatusEvent):void {
+			trace("HTTP status received: " + event.status);
+		}
+		
 		private function retrieveDataSuccessHandler(event:Event):void {
+			log("calling success on data retrieval");
 			var loader:URLLoader = event.target as URLLoader;
-			loader.removeEventListener(Event.COMPLETE, successHandler);
+			loader.removeEventListener(HTTPStatusEvent.HTTP_STATUS, httpStatusHandler);
+			loader.removeEventListener(Event.COMPLETE, retrieveDataSuccessHandler);
 			loader.removeEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
 			_response_status = "200";
 			_response_body = loader.data;
@@ -101,6 +112,7 @@ package
 				new URLRequestHeader('Cache-Control', 'no-cache'));
 			
 			var loader:URLLoader = new URLLoader();
+			loader.addEventListener(HTTPStatusEvent.HTTP_STATUS, httpStatusHandler);
 			loader.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
 			loader.addEventListener(Event.COMPLETE, successHandler);
 			loader.dataFormat = URLLoaderDataFormat.BINARY;
@@ -113,24 +125,30 @@ package
 		
 		public function load_data():void
 		{
-			// TODO Auto Generated method stub
+			log("here!?!?");
+			trace("getting data");
 			var url_request:URLRequest = new URLRequest();
 			url_request.url = "http://localhost:9393/request_bmp";
 			url_request.method = URLRequestMethod.GET;
 			var loader:URLLoader = new URLLoader();
+			log("adding event listeners and calling request");
 			loader.addEventListener(Event.COMPLETE, retrieveDataSuccessHandler);
 			loader.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
+			loader.addEventListener(HTTPStatusEvent.HTTP_STATUS, httpStatusHandler);
 			loader.dataFormat = URLLoaderDataFormat.TEXT;
 			loader.load(url_request);	
 		}
 		
-		public function decode_data(response:String):void
+		private function decode_data(response:String):void
 		{
-			var _decoded_body:String = new String();
-			_decoded_body = response;
-			var dec:Base64Decoder = new Base64Decoder();
-			dec.decode(_decoded_body);
-			log("the decoded string is: " + dec.drain());
+			//Base64Decoder class in mx.utils is completely broken. 
+			//I'm using this class here. http://jpauclair.net/2010/01/09/base64-optimized-as3-lib/
+			var _decoded_body:ByteArray = Base64.decode(response);
+			_decoded_body.position = 0;
+			var vBitmapDataToRead:BitmapData = new BitmapData(Const.WIDTH, Const.HEIGHT, false, 0xffffff);
+			vBitmapDataToRead.setPixels(vBitmapDataToRead.rect, _decoded_body);
+			var bitmap:Bitmap = new Bitmap(vBitmapDataToRead);
+			super.addChild(bitmap);
 		}
 	}
 }
