@@ -51,11 +51,11 @@ class AwsInstance
     end
   end
 
-  def upload_file file
-    puts "uploading file"
-    S3Object.store("test_file", open(file), @bucket_name)
+  def upload_file file, time
+    puts "uploading file: #{time}"
+    S3Object.store(time, open(file), @bucket_name)
     b = Bucket.find('handwriting')
-    puts b["test_file"]
+    puts b[time]
   end
 
   def get_file file_name="test_file"

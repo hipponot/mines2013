@@ -15,7 +15,7 @@ module Eq
 
       post '/ocr' do
         # split_json request.body.read
-        upload_bitmap params
+        upload_bitmap
         db_update
         status 200
         body "file written to S3 storage and json written to database"
@@ -27,23 +27,19 @@ module Eq
       end
 
       helpers do
-        def upload_bitmap params
-
-          puts "BMP encoded data: #{params[:bmp]}"
-          puts "JSON data: #{params[:json]}"
-
+        def upload_bitmap
+          time = Time.now.strftime "%Y-%m-%d_%H:%M:%S"
           s3 = AwsInstance.new
-          File.open('/tmp/file_1', 'wb') { |f| f.write(params[:bmp])}
-          s3.upload_file('/tmp/file_1')
+          File.open("/tmp/#{time}", 'wb') { |f| f.write(params[:bmp])}
+          s3.upload_file "/tmp/#{time}", time
         end
         
         def db_update
           @client = MongoClient.new('localhost', 27017)
-          @db     = @client['json-db']
-          @coll   = @db['test']
+          @db     = @client['handwriting-data']
+          @coll   = @db['json-bmp']
 
-          @coll.remove
-
+          # @coll.remove
           # 3.times do |i|
           #  @coll.insert({'a' => i+1})
           # end

@@ -75,6 +75,7 @@ package
 			if (this.contains(_bitmap)) 
 			{
 				removeChild(_bitmap);
+				_bitmap = null;
 			}
 		}
 		
