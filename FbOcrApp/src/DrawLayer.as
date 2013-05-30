@@ -14,11 +14,12 @@ package
 		private var _last_y:Number;
 		private var _strokes:Array;
 		private var _cur_stroke:Array;
+		private var _bitmap:Bitmap;
 		
 		public function DrawLayer():void
 		{
 			_strokes = new Array();
-			
+			_bitmap = new Bitmap();
 			// Setup background, etc
 			clear();
 			
@@ -71,6 +72,10 @@ package
 			
 			// Setup stroke style (const width, color)
 			this.graphics.lineStyle(3, 0x222222);
+			if (this.contains(_bitmap)) 
+			{
+				removeChild(_bitmap);
+			}
 		}
 		
 		public function get strokes():Array
@@ -88,8 +93,8 @@ package
 		public function set bitmap(bmp:BitmapData)
 		{
 			this.graphics.beginBitmapFill(bmp);
-			var bitmap:Bitmap = new Bitmap(bmp);
-			addChild(bitmap);
+			_bitmap = new Bitmap(bmp);
+			addChild(_bitmap);
 		}
 		
 	}
