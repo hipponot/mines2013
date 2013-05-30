@@ -109,7 +109,6 @@ package
 		{
 			log("load");
 			_server_comm.load_data();
-			log("here?");
 		}
 	}
 }
