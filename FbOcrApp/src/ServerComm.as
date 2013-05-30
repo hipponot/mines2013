@@ -5,6 +5,7 @@ package
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Loader;
+	import flash.display.LoaderInfo;
 	import flash.display.PNGEncoderOptions;
 	import flash.events.Event;
 	import flash.events.HTTPStatusEvent;
@@ -21,6 +22,8 @@ package
 	
 	import mx.binding.utils.BindingUtils;
 	import mx.utils.Base64Encoder;
+	
+	import org.osmf.elements.ImageLoader;
 	
 	public class ServerComm
 	{
@@ -136,21 +139,22 @@ package
 			decoder.decode(response);
 			var _decoded_body:ByteArray = decoder.drain();
 			_decoded_body.position = 0;
-			log("Decoded body length: " + _decoded_body.length);
-			
+//			log("Decoded body length: " + _decoded_body.length);
 			
 			var imgLoader:Loader = new Loader();
 			imgLoader.loadBytes(_decoded_body);
-			imgLoader.content is BitmapData;
-			imgLoader.contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS, onProgressStatus);
-			imgLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoaderReady);
-
-			
-			
+//			
 //			var vBitmapDataToRead:BitmapData = new BitmapData(Const.WIDTH, Const.HEIGHT, false, 0xffffff);
 //			vBitmapDataToRead.setPixels(vBitmapDataToRead.rect, _decoded_body);
 //			var bitmap:Bitmap = new Bitmap(vBitmapDataToRead);
 //			super.addChild(bitmap);
+
+//			Main.draw_layer.bitmap.setPixels(Main.draw_layer.bitmap.rect, _decoded_body);
+//			Main.draw_layer.bitmap = vBitmapDataToRead;
+//			imgLoader.content is BitmapData;
+			imgLoader.contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS, onProgressStatus);
+			imgLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoaderReady);
+			
 		}
 		
 		public function onProgressStatus(e:ProgressEvent):void {   
@@ -160,7 +164,10 @@ package
 		
 		public function onLoaderReady(e:Event):void {     
 			// the image is now loaded, so let's add it to the display tree!     
-			super.addChild(super);
+			var image:Bitmap = Bitmap(e.target.content);
+			var bmp:BitmapData = image.bitmapData;
+			Main.draw_layer.bitmap = bmp;
+			log("Finished");
 		}
 		
 	}

@@ -6,6 +6,7 @@ package
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.utils.getTimer;
+	import flash.display.Bitmap;
 	
 	public class DrawLayer extends Sprite
 	{
@@ -82,6 +83,13 @@ package
 			var bd:BitmapData = new BitmapData(Const.WIDTH,Const.HEIGHT, false, 0xffffff);
 			bd.draw(this);
 			return bd;
+		}
+		
+		public function set bitmap(bmp:BitmapData)
+		{
+			this.graphics.beginBitmapFill(bmp);
+			var bitmap:Bitmap = new Bitmap(bmp);
+			addChild(bitmap);
 		}
 		
 	}

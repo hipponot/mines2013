@@ -10,7 +10,7 @@ package
 	
 	public class Main extends Sprite
 	{
-		private var _draw_layer:DrawLayer;
+		public static var draw_layer:DrawLayer;
 		private var _server_comm:ServerComm;
 		public static var status:TextField;
 		
@@ -29,10 +29,10 @@ package
 		private function init():void
 		{
 			_server_comm = new ServerComm("localhost");
-			_draw_layer = new DrawLayer();
-			_draw_layer.scrollRect = new Rectangle(0,0,Const.WIDTH,Const.HEIGHT);
-			addChild(_draw_layer);
-			_draw_layer.x = _draw_layer.y = 20;
+			draw_layer = new DrawLayer();
+			draw_layer.scrollRect = new Rectangle(0,0,Const.WIDTH,Const.HEIGHT);
+			addChild(draw_layer);
+			draw_layer.x = draw_layer.y = 20;
 			
 			var btn:Sprite = new Sprite();
 			var t:TextField = new TextField();
@@ -45,8 +45,8 @@ package
 			addChild(btn);
 			btn.graphics.beginFill(0xaab2ff);
 			btn.graphics.drawRoundRect(0,0,t.width,t.height,5);
-			btn.x = _draw_layer.x + Const.WIDTH - t.width;
-			btn.y = _draw_layer.y + Const.HEIGHT + 2;
+			btn.x = draw_layer.x + Const.WIDTH - t.width;
+			btn.y = draw_layer.y + Const.HEIGHT + 2;
 			btn.mouseEnabled = true;
 			btn.mouseChildren = false;
 			btn.addEventListener(MouseEvent.MOUSE_DOWN, handle_send);
@@ -62,8 +62,8 @@ package
 			addChild(btn);
 			btn.graphics.beginFill(0xffb2aa);
 			btn.graphics.drawRoundRect(0,0,t.width,t.height,5);
-			btn.x = _draw_layer.x;
-			btn.y = _draw_layer.y + Const.HEIGHT + 2;
+			btn.x = draw_layer.x;
+			btn.y = draw_layer.y + Const.HEIGHT + 2;
 			btn.mouseEnabled = true;
 			btn.mouseChildren = false;
 			btn.addEventListener(MouseEvent.MOUSE_DOWN, handle_clear);
@@ -79,8 +79,8 @@ package
 			addChild(btn);
 			btn.graphics.beginFill(0xaab2ff);
 			btn.graphics.drawRoundRect(0,0,t.width,t.height,5);
-			btn.x = _draw_layer.x + Const.WIDTH/2 - t.width/2;
-			btn.y = _draw_layer.y + Const.HEIGHT + 2;
+			btn.x = draw_layer.x + Const.WIDTH/2 - t.width/2;
+			btn.y = draw_layer.y + Const.HEIGHT + 2;
 			btn.mouseEnabled = true;
 			btn.mouseChildren = false;
 			btn.addEventListener(MouseEvent.MOUSE_DOWN, handle_load);
@@ -95,14 +95,14 @@ package
 		private function handle_send(e:MouseEvent):void
 		{
 			log("send");
-			_server_comm.send_data(_draw_layer.bitmap,
-				_draw_layer.strokes);
+			_server_comm.send_data(draw_layer.bitmap,
+				draw_layer.strokes);
 		}
 		
 		private function handle_clear(e:MouseEvent):void
 		{
 			log("clear");
-			_draw_layer.clear();
+			draw_layer.clear();
 		}
 		
 		private function handle_load(e:MouseEvent):void
