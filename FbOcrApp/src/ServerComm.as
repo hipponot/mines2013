@@ -4,6 +4,7 @@ package
 	
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.display.Loader;
 	import flash.display.PNGEncoderOptions;
 	import flash.events.Event;
 	import flash.events.HTTPStatusEvent;
@@ -19,6 +20,7 @@ package
 	
 	import mx.binding.utils.BindingUtils;
 	import mx.utils.Base64Encoder;
+	import flash.events.ProgressEvent;
 	
 	public class ServerComm
 	{
@@ -83,6 +85,7 @@ package
 			encoder.encodeBytes(png_bytes);
 			var encodedBytes:String = encoder.toString();
 			trace("the byte string is: " + encodedBytes);
+						
 			
 //			var p:PNGEncoder = new PNGEncoder();
 //			var png_bytes:ByteArray = p.encode(bmp);
@@ -136,7 +139,11 @@ package
 			loader.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
 			loader.addEventListener(HTTPStatusEvent.HTTP_STATUS, httpStatusHandler);
 			loader.dataFormat = URLLoaderDataFormat.TEXT;
-			loader.load(url_request);	
+			loader.load(url_request);
+			var imgLoader:Loader = new Loader();
+			imgLoader.load(url_request);
+			imgLoader.contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS, onProgressStatus);
+			imgLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoaderReady);
 		}
 		
 		private function decode_data(response:String):void
@@ -150,6 +157,17 @@ package
 			var bitmap:Bitmap = new Bitmap(vBitmapDataToRead);
 			super.addChild(bitmap);
 		}
+		
+		public function onProgressStatus(e:ProgressEvent):void {   
+			// this is where progress will be monitored     
+			trace(e.bytesLoaded, e.bytesTotal)	; 
+		}
+		
+		public function onLoaderReady(e:Event):void {     
+			// the image is now loaded, so let's add it to the display tree!     
+			super.addChild();
+		}
+		
 	}
 }
 import flash.events.Event;
