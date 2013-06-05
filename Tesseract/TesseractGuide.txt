@@ -1,3 +1,24 @@
+
+#HERE'S ALL YOU SHOULD HAVE TO DO:
+	sudo apt-get install tesseract-ocr
+
+#Then navigate to the Tesseract folder and run some tesseract commands; for example: 
+
+>tesseract -psm 10 1.jpg out
+>cat out.txt
+
+
+#You should see a 1; if you do, GREAT
+#If you want better output, Grant has included a config file that will let you restrict Tesseract's readings to digits; to do a command using that, use:
+
+>tesseract -psm 10 1.jpg out nobatch digits
+
+#If you did not get a desired result, go below, because you may have to compile your own Tesseract with leptonica
+
+---------------------------------------------
+
+#IF THAT DOES NOT WORK, HERE IS THE PROCESS FOR INSTALLING EVERYTHING
+
 #Leptonica should be installed and working fine, but if not, these steps will help you toward compiling your own Tesseract
 
 #Tesseract command line compilation guide (for Vagrant box):
@@ -32,3 +53,5 @@
 
 #If needed, install tesseract (if tesseract commands fail):
 	sudo apt-get install tesseract-ocr
+
+#
