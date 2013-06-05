@@ -39,6 +39,7 @@ Vagrant::Config.run do |config|
     chef.add_recipe "mongo_db"
     chef.add_recipe "desktop_setup"
     chef.add_recipe "imagemagick::rmagick"
+    chef.add_recipe "tesseract"
      chef.json = { 
       'emacs' => {'packages' => ['emacs'] }
      }
