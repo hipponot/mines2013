@@ -1,13 +1,16 @@
 package
 {
-	import flash.display.Sprite;
+	import starling.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
-	import flash.text.TextField;
+	import starling.text.TextField;
 	import flash.utils.setTimeout;
 	
+	import mx.charts.BubbleChart;
+	
+	[SWF(width="1280", height="752", frameRate="60", backgroundColor="#002143")]
 	public class Main extends Sprite
 	{
 		public static var draw_layer:DrawLayer;
@@ -16,9 +19,9 @@ package
 		
 		public function Main():void
 		{
-			this.stage.align = StageAlign.TOP_LEFT;
-			this.stage.scaleMode = StageScaleMode.NO_SCALE;
-			this.stage.frameRate = 30;
+//			this.stage.align = StageAlign.TOP_LEFT;
+//			this.stage.scaleMode = StageScaleMode.NO_SCALE;
+//			this.stage.frameRate = 30;
 			this.stage.color = 0xf2f2f2;
 			
 			// Some devices take a little time for their stage
@@ -34,61 +37,61 @@ package
 			addChild(draw_layer);
 			draw_layer.x = draw_layer.y = 20;
 			
-			var btn:Sprite = new Sprite();
-			var t:TextField = new TextField();
-			t.text = "Send";
-			t.width = 40;
-			t.height = 19;
-			t.scaleX = t.scaleY = 2.5;
-			t.selectable = false;
-			btn.addChild(t);
-			addChild(btn);
-			btn.graphics.beginFill(0xaab2ff);
-			btn.graphics.drawRoundRect(0,0,t.width,t.height,5);
-			btn.x = draw_layer.x + Const.WIDTH - t.width;
-			btn.y = draw_layer.y + Const.HEIGHT + 2;
-			btn.mouseEnabled = true;
-			btn.mouseChildren = false;
-			btn.addEventListener(MouseEvent.MOUSE_DOWN, handle_send);
 			
-			btn = new Sprite();
-			t = new TextField();
-			t.text = "Clear";
-			t.width = 40;
-			t.height = 19;
-			t.scaleX = t.scaleY = 2.5;
-			t.selectable = false;
-			btn.addChild(t);
-			addChild(btn);
-			btn.graphics.beginFill(0xffb2aa);
-			btn.graphics.drawRoundRect(0,0,t.width,t.height,5);
-			btn.x = draw_layer.x;
-			btn.y = draw_layer.y + Const.HEIGHT + 2;
-			btn.mouseEnabled = true;
-			btn.mouseChildren = false;
-			btn.addEventListener(MouseEvent.MOUSE_DOWN, handle_clear);
+//			var btn:Sprite = new Sprite();
+//			var t:TextField = new TextField();
+//			t.text = "Send";
+//			t.width = 40;
+//			t.height = 19;
+//			t.scaleX = t.scaleY = 2.5;
+//			t.selectable = false;
+//			btn.addChild(t);
+//			addChild(btn);
+//			btn.graphics.beginFill(0xaab2ff);
+//			btn.graphics.drawRoundRect(0,0,t.width,t.height,5);
+//			btn.x = draw_layer.x + Const.WIDTH - t.width;
+//			btn.y = draw_layer.y + Const.HEIGHT + 2;
+//			btn.mouseEnabled = true;
+//			btn.mouseChildren = false;
+//			btn.addEventListener(MouseEvent.MOUSE_DOWN, handle_send);
+//			
+//			btn = new Sprite();
+//			t = new TextField();
+//			t.text = "Clear";
+//			t.width = 40;
+//			t.height = 19;
+//			t.scaleX = t.scaleY = 2.5;
+//			t.selectable = false;
+//			btn.addChild(t);
+//			addChild(btn);
+//			btn.graphics.beginFill(0xffb2aa);
+//			btn.graphics.drawRoundRect(0,0,t.width,t.height,5);
+//			btn.x = draw_layer.x;
+//			btn.y = draw_layer.y + Const.HEIGHT + 2;
+//			btn.mouseEnabled = true;
+//			btn.mouseChildren = false;
+//			btn.addEventListener(MouseEvent.MOUSE_DOWN, handle_clear);
+//			
+//			btn = new Sprite();
+//			t = new TextField();
+//			t.text = "Load";
+//			t.width = 40;
+//			t.height = 19;
+//			t.scaleX = t.scaleY = 2.5;
+//			t.selectable = false;
+//			btn.addChild(t);
+//			addChild(btn);
+//			btn.graphics.beginFill(0xaab2ff);
+//			btn.graphics.drawRoundRect(0,0,t.width,t.height,5);
+//			btn.x = draw_layer.x + Const.WIDTH/2 - t.width/2;
+//			btn.y = draw_layer.y + Const.HEIGHT + 2;
+//			btn.mouseEnabled = true;
+//			btn.mouseChildren = false;
+//			btn.addEventListener(MouseEvent.MOUSE_DOWN, handle_load);
 			
-			btn = new Sprite();
-			t = new TextField();
-			t.text = "Load";
-			t.width = 40;
-			t.height = 19;
-			t.scaleX = t.scaleY = 2.5;
-			t.selectable = false;
-			btn.addChild(t);
-			addChild(btn);
-			btn.graphics.beginFill(0xaab2ff);
-			btn.graphics.drawRoundRect(0,0,t.width,t.height,5);
-			btn.x = draw_layer.x + Const.WIDTH/2 - t.width/2;
-			btn.y = draw_layer.y + Const.HEIGHT + 2;
-			btn.mouseEnabled = true;
-			btn.mouseChildren = false;
-			btn.addEventListener(MouseEvent.MOUSE_DOWN, handle_load);
-			
-			status = new TextField();
+			status = new TextField(45,10,"...");
 			status.width = Const.WIDTH;
-			status.y = btn.y + btn.height;
-			status.text = "...";
+//			status.y = btn.y + btn.height;
 			addChild(status);
 		}
 		
