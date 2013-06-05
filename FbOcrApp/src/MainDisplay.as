@@ -28,9 +28,6 @@ package
 		
 		private var clearButton:Button;
 		
-		[Embed(source="back.jpg")]
-		private var back:Class;
-		
 		public function MainDisplay()
 		{
 			this.addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
@@ -39,9 +36,7 @@ package
 		
 		protected function addedToStageHandler(event:Event):void
 		{
-			addChild(Image.fromBitmap(new back()));
 			this.theme = new MetalWorksMobileTheme(this.stage);
-
 		}
 		
 		private function init():void
