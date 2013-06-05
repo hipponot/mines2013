@@ -18,3 +18,5 @@ _yardoc
 doc/
 bin-debug/
 .actionScriptProperties
+eq_ocr/lib/buckets/handwriting
+ /vagrant/Tesseract/leptonica-1.69/

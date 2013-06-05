@@ -7,6 +7,7 @@ PATH
       json
       mongo
       rice
+      rmagick
       shotgun
       sinatra
 
@@ -30,6 +31,7 @@ GEM
     rack-protection (1.5.0)
       rack
     rice (1.5.1)
+    rmagick (2.13.2)
     shotgun (0.9)
       rack (>= 1.0)
     sinatra (1.4.2)
