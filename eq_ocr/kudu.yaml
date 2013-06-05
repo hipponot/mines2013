@@ -29,4 +29,7 @@
 - :name: rice
   :group: third-party
   :type: gem  
+- :name: rmagick
+  :group: third-party
+  :type: gem  
 ...
