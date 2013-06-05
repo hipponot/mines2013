@@ -4,6 +4,7 @@ require "eq_ocr/version"
 require 'eq_ocr/aws_instance'
 require 'mongo'
 require "eq_ocr/eq_ocr"
+require "eq_ocr/segment"
 
 module Eq
   module Ocr 
@@ -17,6 +18,7 @@ module Eq
         # split_json request.body.read
         upload_bitmap
         db_update
+        process_data
         status 200
         body "file written to S3 storage and json written to database"
       end
@@ -32,6 +34,7 @@ module Eq
           s3 = AwsInstance.new
           File.open("/tmp/#{time}", 'wb') { |f| f.write(params[:bmp])}
           s3.upload_file "/tmp/#{time}", time
+          
         end
         
         def db_update
@@ -51,6 +54,11 @@ module Eq
             
           # ocr = OcrExt.new
           # puts eval("2+2")
+        end
+        
+        def process_data
+          seg = Segmentation.new
+          seg.segment(params[:bmp], params[:json])
         end
       end
     end

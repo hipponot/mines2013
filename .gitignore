@@ -18,3 +18,4 @@ _yardoc
 doc/
 bin-debug/
 .actionScriptProperties
+eq_ocr/lib/buckets/handwriting

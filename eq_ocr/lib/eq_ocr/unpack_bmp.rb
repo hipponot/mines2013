@@ -1,8 +1,6 @@
 require "base64"
 require "RMagick"
 
-include Magick
-
 class UnpackBmp
 
 	def bin_to_bmp bitmap_64

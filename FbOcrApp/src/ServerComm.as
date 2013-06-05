@@ -87,12 +87,15 @@ package
 			var encoder:Base64Encoder = new Base64Encoder();
 			encoder.encodeBytes(png_bytes);
 			var encodedBytes:String = encoder.toString();
+			
 						
 			// Encode strokes as JSON
 			var strokes_json:String = JSON.stringify(strokes);
 			
 			log("Sending " + encodedBytes.length + " encoded bmp bytes...");
 			log("Sending " + strokes_json.length + " strokes bytes");
+			
+			log("Sending " + strokes_json + " strokes bytes");
 			
 			Main.status.text = "Send " + encodedBytes.length + ", response=???";
 			
