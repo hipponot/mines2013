@@ -26,7 +26,7 @@ package
 		private var mStarling:Starling;
 		public static var draw_layer:DrawLayer;
 		private var _server_comm:ServerComm;
-		public static var status:TextFieldTextRenderer;
+		public static var status:TextField;
 		private var theme:MetalWorksMobileTheme;
 	
 		
@@ -74,8 +74,7 @@ package
 
 			loadButton = new Button();
 			loadButton.label = "Load";
-			loadButton.scaleX = loadButton.scaleY = 1.5;
-			
+//			loadButton.scaleX = loadButton.scaleY = 1.5;
 			loadButton.width = 50;
 			loadButton.height = 20;
 			loadButton.x = draw_layer.x + Const.WIDTH/2 - loadButton.width/2;
@@ -84,12 +83,12 @@ package
 			loadButton.addEventListener(Event.TRIGGERED, button_test);
 			addChild(loadButton);
 			
-			var textField:TextField = new TextField(100, 200, "blargh", "Arial", 20, Color.WHITE);
-			textField.y = draw_layer.x + draw_layer.height + clearButton.height + 2;
-			textField.x = clearButton.x;
-			textField.hAlign = HAlign.LEFT;
-			textField.vAlign = VAlign.TOP;
-			addChild(textField);
+			status = new TextField(400, 100, "blargh", "Arial", 20, Color.WHITE);
+			status.y = draw_layer.x + draw_layer.height + clearButton.height + 2;
+			status.x = clearButton.x;
+			status.hAlign = HAlign.LEFT;
+			status.vAlign = VAlign.TOP;
+			addChild(status);
 			
 			log("here");
 		}
