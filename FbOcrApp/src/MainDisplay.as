@@ -28,11 +28,13 @@ package
 		private var _server_comm:ServerComm;
 		public static var status:TextField;
 		private var theme:MetalWorksMobileTheme;
-	
+		private static const buttonWidth:Number = 75;
+		private static const buttonHeight:Number = 50;
 		
 		private var clearButton:Button;
 		private var loadButton:Button;
 		private var sendButton:Button;
+		
 		
 		public function MainDisplay()
 		{
@@ -55,33 +57,57 @@ package
 
 //			var sendButton:Button = new (Assets.getTexture("Button1"), "Send");
 			sendButton = new Button();
-			sendButton.label = "Send";
-			sendButton.width = 50;
-			sendButton.height = 20;
-			sendButton.x = draw_layer.x + Const.WIDTH - sendButton.width;
+//			sendButton.label = "Send";
+			sendButton.width = buttonWidth;
+			sendButton.height = buttonHeight;
+			sendButton.x = draw_layer.x + Const.WIDTH - buttonWidth;
 			sendButton.y = draw_layer.y + Const.HEIGHT + 2;
 			sendButton.addEventListener(Event.TRIGGERED, handle_send);
 			addChild(sendButton);
 
+			var sendButtonLabel:TextField = new TextField(buttonWidth, buttonHeight, "Send", "Arial", 16, Color.BLACK);
+			sendButtonLabel.text = "Send";
+			sendButtonLabel.touchable = false;
+			sendButtonLabel.border = true;
+			sendButtonLabel.x = draw_layer.x + Const.WIDTH - buttonWidth;
+			sendButtonLabel.y = draw_layer.y + Const.HEIGHT + 2;
+			addChild(sendButtonLabel);
+			
 			clearButton = new Button();
-			clearButton.label = "Clear";
-			clearButton.width = 50;
-			clearButton.height = 20;
+//			clearButton.label = "Clear";
+			clearButton.width = buttonWidth;
+			clearButton.height = buttonHeight;
 			clearButton.x = draw_layer.x;
 			clearButton.y = draw_layer.y + Const.HEIGHT + 2;
 			clearButton.addEventListener(Event.TRIGGERED, handle_clear);
 			addChild(clearButton);
 
+			var clearButtonLabel:TextField = new TextField(buttonWidth, buttonHeight, "Clear", "Arial", 16, Color.BLACK);
+			clearButtonLabel.text = "Clear";
+			clearButtonLabel.touchable = false;
+			clearButtonLabel.border = true;
+			clearButtonLabel.x = draw_layer.x;
+			clearButtonLabel.y = draw_layer.y + Const.HEIGHT + 2;
+			addChild(clearButtonLabel);
+			
 			loadButton = new Button();
-			loadButton.label = "Load";
-//			loadButton.scaleX = loadButton.scaleY = 1.5;
-			loadButton.width = 50;
-			loadButton.height = 20;
-			loadButton.x = draw_layer.x + Const.WIDTH/2 - loadButton.width/2;
+			// loadButton.label = "";
+			// loadButton.scaleX = loadButton.scaleY = 1.5;
+			loadButton.width = buttonWidth;
+			loadButton.height = buttonHeight;
+			loadButton.x = draw_layer.x + Const.WIDTH/2 - buttonWidth/2;
 			loadButton.y = draw_layer.y + Const.HEIGHT + 2;
 			loadButton.addEventListener(Event.TRIGGERED, handle_load);
 			loadButton.addEventListener(Event.TRIGGERED, button_test);
 			addChild(loadButton);
+
+			var loadButtonLabel:TextField = new TextField(buttonWidth, buttonHeight, "Load", "Arial", 16, Color.BLACK);
+			loadButtonLabel.text = "Load";
+			loadButtonLabel.touchable = false;
+			loadButtonLabel.border = true;
+			loadButtonLabel.x = draw_layer.x + Const.WIDTH/2 - buttonWidth/2;
+			loadButtonLabel.y = draw_layer.y + Const.HEIGHT + 2;
+			addChild(loadButtonLabel);
 			
 			status = new TextField(400, 100, "blargh", "Arial", 20, Color.WHITE);
 			status.y = draw_layer.x + draw_layer.height + clearButton.height + 2;
