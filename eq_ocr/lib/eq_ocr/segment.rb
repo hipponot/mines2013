@@ -85,21 +85,21 @@ class Segmentation
 		end
 
 
-		if (line2[2] - line1[-1]) < eps
-			if i>0
-				new_stroke_data = stroke_data[0..i-1]
-			else
-				new_stroke_data = Array.new
-			end
-			stroke = line1.concat(line2)
-			new_stroke_data << stroke
-			if (i+2) < stroke_data.length
-				new_stroke_data.concat(stroke_data[i+2..-1])
-			end
-			return compress new_stroke_data, i
-		else
-			return compress stroke_data, i+1
-		end
+		#if (line2[2] - line1[-1]) < eps
+		#	if i>0
+		#		new_stroke_data = stroke_data[0..i-1]
+		#	else
+		#		new_stroke_data = Array.new
+		#	end
+		#	stroke = line1.concat(line2)
+		#	new_stroke_data << stroke
+		#	if (i+2) < stroke_data.length
+		#		new_stroke_data.concat(stroke_data[i+2..-1])
+		#	end
+		#	return compress new_stroke_data, i
+		#else
+		#	return compress stroke_data, i+1
+		#end
 	end
 
 	# Accepts 4 coordinates defining a rectange, and an image (img)

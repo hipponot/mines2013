@@ -1,5 +1,6 @@
 package
 {
+	import com.adobe.serialization.json.JSON;
 	import com.sociodox.utils.Base64;
 	
 	import flash.display.Bitmap;
@@ -31,6 +32,7 @@ package
 		private var _response_status:String;
 		private var _response_body:String;
 		private var mainDisplay:MainDisplay;
+		private var jsonOutput:Object;
 		
 		public function ServerComm(host:String):void
 		{
@@ -54,6 +56,8 @@ package
 			_response_status = "200";
 			_response_body = loader.data;
 			MainDisplay.status.text = " Response was: " + _response_status + " Body was: " + _response_body;
+			jsonOutput = JSON.parse(_response_body);
+//			log("First element: " + jsonOutput[0] + " :: First element value: " + jsonOutput[0][1] + "Second Element:: " + jsonOutput[2] + " :Second element value : : " + jsonOutput[2][1]);
 		}
 		
 		private function httpStatusHandler(event:HTTPStatusEvent):void {
@@ -125,8 +129,12 @@ package
 		public function load_data():void
 		{
 			var url_request:URLRequest = new URLRequest();
+			var url_params:URLVariables = new URLVariables();
 			url_request.url = "http://localhost:9393/request_bmp";
 			url_request.method = URLRequestMethod.GET;
+//			url_params.filename = filename;
+			url_request.data = url_params;
+			
 			var loader:URLLoader = new URLLoader();
 			loader.addEventListener(Event.COMPLETE, retrieveDataSuccessHandler);
 			loader.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
