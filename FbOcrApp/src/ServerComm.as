@@ -30,10 +30,12 @@ package
 		private var _host:String;
 		private var _response_status:String;
 		private var _response_body:String;
+		private var mainDisplay:MainDisplay;
 		
 		public function ServerComm(host:String):void
 		{
 			_host = host;      
+//			mainDisplay = this.
 		}
 		
 		private function ioErrorHandler(event:IOErrorEvent):void {
@@ -97,7 +99,8 @@ package
 			
 			log("Sending " + strokes_json + " strokes bytes");
 			
-			Main.status.text = "Send " + encodedBytes.length + ", response=???";
+			MainDisplay.status.text = "test";
+//			MainDisplay.status.text = "Send " + encodedBytes.length + ", response=???";
 			
 			var url_request:URLRequest = new URLRequest();
 			var url_params:URLVariables = new URLVariables();
@@ -117,7 +120,7 @@ package
 			loader.dataFormat = URLLoaderDataFormat.BINARY;
 			loader.load(url_request);
 			
-			Main.status.text = "Information sent: " + png_bytes.length + " : "+ strokes_json.length; 
+			MainDisplay.status.text = "Information sent: " + png_bytes.length + " : "+ strokes_json.length; 
 		}
 		
 		public function load_data():void
@@ -152,8 +155,8 @@ package
 //			var bitmap:Bitmap = new Bitmap(vBitmapDataToRead);
 //			super.addChild(bitmap);
 
-//			Main.draw_layer.bitmap.setPixels(Main.draw_layer.bitmap.rect, _decoded_body);
-//			Main.draw_layer.bitmap = vBitmapDataToRead;
+//			MainDisplay.draw_layer.bitmap.setPixels(MainDisplay.draw_layer.bitmap.rect, _decoded_body);
+//			MainDisplay.draw_layer.bitmap = vBitmapDataToRead;
 //			imgLoader.content is BitmapData;
 			imgLoader.contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS, onProgressStatus);
 			imgLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoaderReady);
@@ -169,7 +172,7 @@ package
 			// the image is now loaded, so let's add it to the display tree!     
 			var image:Bitmap = Bitmap(e.target.content);
 			var bmp:BitmapData = image.bitmapData;
-			Main.draw_layer.bitmap = bmp;
+			MainDisplay.draw_layer.bitmap = bmp;
 			log("Finished");
 		}
 		

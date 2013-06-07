@@ -1,0 +1,57 @@
+
+#HERE'S ALL YOU SHOULD HAVE TO DO:
+	sudo apt-get install tesseract-ocr
+
+#Then navigate to the Tesseract folder and run some tesseract commands; for example: 
+
+>tesseract -psm 10 1.jpg out
+>cat out.txt
+
+
+#You should see a 1; if you do, GREAT
+#If you want better output, Grant has included a config file that will let you restrict Tesseract's readings to digits; to do a command using that, use:
+
+>tesseract -psm 10 1.jpg out nobatch digits
+
+#If you did not get a desired result, go below, because you may have to compile your own Tesseract with leptonica
+
+---------------------------------------------
+
+#IF THAT DOES NOT WORK, HERE IS THE PROCESS FOR INSTALLING EVERYTHING
+
+#Leptonica should be installed and working fine, but if not, these steps will help you toward compiling your own Tesseract
+
+#Tesseract command line compilation guide (for Vagrant box):
+
+#(Borrowed primarily from 
+# https://code.google.com/p/tesseract-ocr/wiki/Compiling )
+
+#/****Process*****\
+
+#Install some libraries (if needed):
+	sudo apt-get install libpng12-dev
+	sudo apt-get install libtiff4-dev
+
+#Navigate to tesseract folder (if you're trying to start fresh, you may want to empty it first) and install leptonica:
+	gunzip leptonica-1.69.tar.gz
+	tar -xvf leptonica-1.69.tar
+	cd leptonica-1.69
+	./configure
+	make
+	make install
+	sudo ldconfig
+
+#To install Tesseract in $HOME/local:
+	./autogen.sh
+	./configure --prefix=$HOME/local/
+	make install
+
+#Download language data:
+	wget http://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.01.eng.tar.gz
+	tar xf tesseract-ocr-3.01.eng.tar.gz
+	export TESSDATA_PREFIX=/vagrant/Tesseract/tesseract-ocr/
+
+#If needed, install tesseract (if tesseract commands fail):
+	sudo apt-get install tesseract-ocr
+
+#
