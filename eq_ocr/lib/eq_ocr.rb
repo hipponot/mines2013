@@ -17,14 +17,16 @@ module Eq
       post '/ocr' do
         # split_json request.body.read
         @time = Time.now.strftime "%Y-%m-%d_%H:%M:%S"
-        @ocr_text = {}
+        @ocr_json = {}
+        @ocr_values = []
         db_update
         process_data
         run_ocr
         upload_bitmap
         content_type :json
         status 200
-        body @ocr_text.sort.to_json
+        # body @ocr_json.sort.to_json
+        body @ocr_values.sort.to_s
       end
 
       get '/request_bmp' do
@@ -39,9 +41,11 @@ module Eq
           Dir.glob("crop*").each do |file|
             puts "Running tesseract on #{file}"
             %x[tesseract -psm 10 #{file} out nobatch digits]
-            @ocr_text[file] = `cat out.txt`.strip
+            @ocr_json[file] = `cat out.txt`.strip
+            @ocr_values << `cat out.txt`.strip
           end  
-          puts @ocr_text.sort
+          # puts @ocr_json.sort
+          puts @ocr_values.sort
         end
 
         def upload_bitmap
@@ -53,27 +57,13 @@ module Eq
             s3.upload_file "#{filename}", "crop#{@time}_#{i}"
             File.delete filename
           end
-
-          
         end
         
         def db_update
           @client = MongoClient.new('localhost', 27017)
           @db     = @client['handwriting-data']
           @coll   = @db['json-bmp']
-
-          # @coll.remove
-          # 3.times do |i|
-          #  @coll.insert({'a' => i+1})
-          # end
-
           @coll.insert({'json' => params[:json]})
-
-          puts "There are #{@coll.count} records. Here they are:"
-          #@coll.find.each { |doc| puts doc.inspect }
-            
-          # ocr = OcrExt.new
-          # puts eval("2+2")
         end
         
         def process_data

@@ -91,6 +91,7 @@ class Segmentation
 		#	return compress stroke_data, i+1
 		#end
 	end
+
 	#[0,0,0,2,0,0,2,3,0,0,2,0]
 	# Accepts 4 coordinates defining a rectange, and an image (img)
 	# Returns the image defined within img by the rectangle parameter

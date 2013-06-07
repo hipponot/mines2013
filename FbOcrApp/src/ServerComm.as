@@ -55,9 +55,9 @@ package
 			loader.removeEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
 			_response_status = "200";
 			_response_body = loader.data;
-			MainDisplay.status.text = " Response was: " + _response_status + " Body was: " + JSON.parse(_response_body);
+			MainDisplay.status.text = " Response was: " + _response_status + " Body was: " + _response_body;
 			jsonOutput = JSON.parse(_response_body);
-			log("First element: " + jsonOutput[0] + " :: First element value: " + jsonOutput[0][1] + "Second Element:: " + jsonOutput[2] + " :Second element value : : " + jsonOutput[2][1]);
+//			log("First element: " + jsonOutput[0] + " :: First element value: " + jsonOutput[0][1] + "Second Element:: " + jsonOutput[2] + " :Second element value : : " + jsonOutput[2][1]);
 		}
 		
 		private function httpStatusHandler(event:HTTPStatusEvent):void {
