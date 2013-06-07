@@ -17,19 +17,33 @@ module Eq
       post '/ocr' do
         # split_json request.body.read
         @time = Time.now.strftime "%Y-%m-%d_%H:%M:%S"
+        @ocr_text = {}
         db_update
         process_data
+        run_ocr
         upload_bitmap
+        content_type :json
         status 200
-        body "file written to S3 storage and json written to database"
+        body @ocr_text.sort.to_json
       end
 
       get '/request_bmp' do
         s3 = AwsInstance.new
-        s3.get_file 
+        s3.get_file params[:filename]
       end
 
       helpers do
+
+        def run_ocr
+          Dir.chdir "/tmp"
+          Dir.glob("crop*").each do |file|
+            puts "Running tesseract on #{file}"
+            %x[tesseract -psm 10 #{file} out nobatch digits]
+            @ocr_text[file] = `cat out.txt`.strip
+          end  
+          puts @ocr_text.sort
+        end
+
         def upload_bitmap
           s3 = AwsInstance.new
           #File.open("/tmp/#{@time}", 'wb') { |f| f.write(params[:bmp])}
@@ -37,7 +51,9 @@ module Eq
           #Dir.glob(/^(\/tmp\/crop#{@time}\_\d*)$/).each_with_index do |filename, i|
           Dir.glob("/tmp/crop*").each_with_index do |filename, i|
             s3.upload_file "#{filename}", "crop#{@time}_#{i}"
+            File.delete filename
           end
+
           
         end
         

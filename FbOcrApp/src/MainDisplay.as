@@ -109,7 +109,7 @@ package
 			loadButtonLabel.y = draw_layer.y + Const.HEIGHT + 2;
 			addChild(loadButtonLabel);
 			
-			status = new TextField(400, 100, "blargh", "Arial", 20, Color.WHITE);
+			status = new TextField(Const.WIDTH, 400, "blargh", "Arial", 20, Color.WHITE);
 			status.y = draw_layer.x + draw_layer.height + clearButton.height + 2;
 			status.x = clearButton.x;
 			status.hAlign = HAlign.LEFT;
