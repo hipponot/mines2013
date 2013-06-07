@@ -16,9 +16,10 @@ module Eq
 
       post '/ocr' do
         # split_json request.body.read
-        upload_bitmap
+        @time = Time.now.strftime "%Y-%m-%d_%H:%M:%S"
         db_update
         process_data
+        upload_bitmap
         status 200
         body "file written to S3 storage and json written to database"
       end
@@ -30,10 +31,13 @@ module Eq
 
       helpers do
         def upload_bitmap
-          time = Time.now.strftime "%Y-%m-%d_%H:%M:%S"
           s3 = AwsInstance.new
-          File.open("/tmp/#{time}", 'wb') { |f| f.write(params[:bmp])}
-          s3.upload_file "/tmp/#{time}", time
+          #File.open("/tmp/#{@time}", 'wb') { |f| f.write(params[:bmp])}
+          #s3.upload_file "/tmp/#{@time}", @time
+          #Dir.glob(/^(\/tmp\/crop#{@time}\_\d*)$/).each_with_index do |filename, i|
+          Dir.glob("/tmp/crop*").each_with_index do |filename, i|
+            s3.upload_file "#{filename}", "crop#{@time}_#{i}"
+          end
           
         end
         
@@ -50,7 +54,7 @@ module Eq
           @coll.insert({'json' => params[:json]})
 
           puts "There are #{@coll.count} records. Here they are:"
-          @coll.find.each { |doc| puts doc.inspect }
+          #@coll.find.each { |doc| puts doc.inspect }
             
           # ocr = OcrExt.new
           # puts eval("2+2")
@@ -58,7 +62,7 @@ module Eq
         
         def process_data
           seg = Segmentation.new
-          seg.segment(params[:bmp], params[:json])
+          seg.segment(params[:bmp], params[:json], @time)
         end
       end
     end
