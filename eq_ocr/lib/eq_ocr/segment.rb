@@ -7,18 +7,22 @@ class Segmentation
 	include Magick
 
 	# Accepts a 64bit bitmap encoding and associated stroke data, and returns an array of bitmaps to be processed by tesseract
-	def segment bitmap_64, stroke_data
+	def segment bitmap_64, stroke_data, t
 		img = bin_to_bmp(bitmap_64)
 
 		#Convert json from string into 2d array
 		stroke_data = eval(stroke_data)
 
+		stroke_data = compress stroke_data
+
 		all_bounds = get_bounds stroke_data
 
 		# Create the array of bitmaps to be returned
+
 		all_bounds.each_with_index do |bounds, index|
 			cropped = crop_image(bounds[0], bounds[1], bounds[2], bounds[3], img)
-			cropped.write("chop_after#{index}.jpg")
+			cropped.write("/tmp/crop#{t}_#{index}.png")
+			cropped.write("crop#{t}_#{index}.png")
 		end
 		puts "Done!"
 	end
@@ -28,6 +32,34 @@ class Segmentation
 		bin = Base64.decode64(bitmap_64)
 		img = Image.from_blob(bin)
 		return img[0]
+	end
+
+	# Determines if two strokes are close enough together (in time) to be considered part of the same char. If they are, they are compressed into one stroke.
+	def compress stroke_data, i=0
+		eps = 500
+
+		if i >= (stroke_data.length-1)
+			return stroke_data
+		end
+
+		line1 = stroke_data[i]
+		line2 = stroke_data[i+1]
+
+		if (line2[2] - line1[-1]) < eps
+			if i>0
+				new_stroke_data = stroke_data[0..i-1]
+			else
+				new_stroke_data = Array.new
+			end
+			stroke = line1.concat(line2)
+			new_stroke_data << stroke
+			if (i+2) < stroke_data.length
+				new_stroke_data.concat(stroke_data[i+2..-1])
+			end
+			return compress new_stroke_data, i
+		else
+			return compress stroke_data, i+1
+		end
 	end
 	
 	# Accepts 4 coordinates defining a rectange, and an image (img)
