@@ -12,7 +12,7 @@ class Segmentation
 		#Convert json from string into 2d array
 		stroke_data = eval(stroke_data)
 		stroke_data = compress stroke_data
-		all_bounds = get_bounds stroke_data
+		all_bounds = get_all_bounds stroke_data
 
 		# Create the array of bitmaps to be returned
 		all_bounds.each_with_index do |bounds, index|
@@ -58,6 +58,16 @@ class Segmentation
 		line1 = stroke_data[i]
 		line2 = stroke_data[i+1]
 
+		if line1.length <= 3
+			stroke_data.delete_at i
+			return compress stroke_data, i
+		end
+
+		if line2.length <= 3
+			stroke_data.delete_at i+1
+			return compress stroke_data, i
+		end
+
 		if is_fraction? line1, line2
 			if i>0
 				new_stroke_data = stroke_data[0..i-1]
@@ -75,23 +85,23 @@ class Segmentation
 		end
 
 
-		#if (line2[2] - line1[-1]) < eps
-		#	if i>0
-		#		new_stroke_data = stroke_data[0..i-1]
-		#	else
-		#		new_stroke_data = Array.new
-		#	end
-		#	stroke = line1.concat(line2)
-		#	new_stroke_data << stroke
-		#	if (i+2) < stroke_data.length
-		#		new_stroke_data.concat(stroke_data[i+2..-1])
-		#	end
-		#	return compress new_stroke_data, i
-		#else
-		#	return compress stroke_data, i+1
-		#end
+		if (line2[2] - line1[-1]) < eps
+			if i>0
+				new_stroke_data = stroke_data[0..i-1]
+			else
+				new_stroke_data = Array.new
+			end
+			stroke = line1.concat(line2)
+			new_stroke_data << stroke
+			if (i+2) < stroke_data.length
+				new_stroke_data.concat(stroke_data[i+2..-1])
+			end
+			return compress new_stroke_data, i
+		else
+			return compress stroke_data, i+1
+		end
 	end
-	#[0,0,0,2,0,0,2,3,0,0,2,0]
+
 	# Accepts 4 coordinates defining a rectange, and an image (img)
 	# Returns the image defined within img by the rectangle parameter
 	def crop_image min_x, max_x, min_y, max_y, img
@@ -127,34 +137,38 @@ class Segmentation
 		centroid[0] /= mass
 		centroid[1] /= mass
 		return centroid
-	end 
+	end
 
-	# Accepts a 2d array of stroke data, where each inner array is a single stroke [x,y,t,x,y,t...]
-	# Returns a 2d array, where each innner array is the of minima/maxima of x and y coordinates for that stroke [[min_x, max_x, min_y, max_y],[min_x, max_x, min_y, max_y]...]
-	def get_bounds stroke_data
-		# 2d array to be returned
+	def get_all_bounds stroke_data
 		all_bounds = Array.new
 
 		stroke_data.each do |inner_array|
-
-			# Arrays for storing x and y values for the stroke currently being inspected
-			xvals = Array.new
-			yvals = Array.new
-
-			inner_array.each_slice(3) do |point|
-				xvals.push(point[0])
-				yvals.push(point[1])
-			end
-
-			# A temporary array that stores the min/max x/y for the stroke being inspected
-			bounds = Array.new
-			bounds << xvals.min << xvals.max << yvals.min << yvals.max
-
-			# Add the bounds for the current stroke to the array of all bounds
-			all_bounds << bounds
+			all_bounds << get_bounds(inner_array)
 		end
 
 		return all_bounds
+	end
+
+	# Accepts a 2d array of stroke data, where each inner array is a single stroke [x,y,t,x,y,t...]
+	# Returns a 2d array, where each innner array is the of minima/maxima of x and y coordinates for that stroke [[min_x, max_x, min_y, max_y],[min_x, max_x, min_y, max_y]...]
+	def get_bounds stroke
+		# 2d array to be returned
+		#all_bounds = Array.new
+
+		#stroke_data.each do |inner_array|
+
+			# Arrays for storing x and y values for the stroke currently being inspected
+		xvals = Array.new
+		yvals = Array.new
+		stroke.each_slice(3) do |point|
+			xvals.push(point[0])
+			yvals.push(point[1])
+		end
+		# A temporary array that stores the min/max x/y for the stroke being inspected
+		bounds = Array.new
+		bounds << xvals.min << xvals.max << yvals.min << yvals.max
+
+		return bounds
 	end
 end
 
