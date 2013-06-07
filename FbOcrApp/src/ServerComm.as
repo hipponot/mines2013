@@ -53,7 +53,7 @@ package
 			loader.removeEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
 			_response_status = "200";
 			_response_body = loader.data;
-			Main.status.text = " Response was: " + _response_status + " Body was: " + _response_body;
+			MainDisplay.status.text = " Response was: " + _response_status + " Body was: " + _response_body;
 		}
 		
 		private function httpStatusHandler(event:HTTPStatusEvent):void {
@@ -96,11 +96,10 @@ package
 			
 			log("Sending " + encodedBytes.length + " encoded bmp bytes...");
 			log("Sending " + strokes_json.length + " strokes bytes");
-			
 			log("Sending " + strokes_json + " strokes bytes");
 			
-			MainDisplay.status.text = "test";
-//			MainDisplay.status.text = "Send " + encodedBytes.length + ", response=???";
+//			MainDisplay.status.text = "Send";
+			MainDisplay.status.text = "Send " + encodedBytes.length + ", response=???";
 			
 			var url_request:URLRequest = new URLRequest();
 			var url_params:URLVariables = new URLVariables();
@@ -149,15 +148,6 @@ package
 			
 			var imgLoader:Loader = new Loader();
 			imgLoader.loadBytes(_decoded_body);
-//			
-//			var vBitmapDataToRead:BitmapData = new BitmapData(Const.WIDTH, Const.HEIGHT, false, 0xffffff);
-//			vBitmapDataToRead.setPixels(vBitmapDataToRead.rect, _decoded_body);
-//			var bitmap:Bitmap = new Bitmap(vBitmapDataToRead);
-//			super.addChild(bitmap);
-
-//			MainDisplay.draw_layer.bitmap.setPixels(MainDisplay.draw_layer.bitmap.rect, _decoded_body);
-//			MainDisplay.draw_layer.bitmap = vBitmapDataToRead;
-//			imgLoader.content is BitmapData;
 			imgLoader.contentLoaderInfo.addEventListener(ProgressEvent.PROGRESS, onProgressStatus);
 			imgLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoaderReady);
 			

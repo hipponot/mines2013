@@ -65,7 +65,7 @@ package
 			sendButton.addEventListener(Event.TRIGGERED, handle_send);
 			addChild(sendButton);
 
-			var sendButtonLabel:TextField = new TextField(buttonWidth, buttonHeight, "Send", "Arial", 16, Color.BLACK);
+			var sendButtonLabel:TextField = new TextField(buttonWidth, buttonHeight, "Send", "Verdana", 16, Color.BLACK);
 			sendButtonLabel.text = "Send";
 			sendButtonLabel.touchable = false;
 			sendButtonLabel.border = true;
@@ -82,7 +82,7 @@ package
 			clearButton.addEventListener(Event.TRIGGERED, handle_clear);
 			addChild(clearButton);
 
-			var clearButtonLabel:TextField = new TextField(buttonWidth, buttonHeight, "Clear", "Arial", 16, Color.BLACK);
+			var clearButtonLabel:TextField = new TextField(buttonWidth, buttonHeight, "Clear", "Verdana", 16, Color.BLACK);
 			clearButtonLabel.text = "Clear";
 			clearButtonLabel.touchable = false;
 			clearButtonLabel.border = true;
@@ -101,7 +101,7 @@ package
 			loadButton.addEventListener(Event.TRIGGERED, button_test);
 			addChild(loadButton);
 
-			var loadButtonLabel:TextField = new TextField(buttonWidth, buttonHeight, "Load", "Arial", 16, Color.BLACK);
+			var loadButtonLabel:TextField = new TextField(buttonWidth, buttonHeight, "Load", "Verdana", 16, Color.BLACK);
 			loadButtonLabel.text = "Load";
 			loadButtonLabel.touchable = false;
 			loadButtonLabel.border = true;

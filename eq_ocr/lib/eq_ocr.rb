@@ -16,9 +16,9 @@ module Eq
 
       post '/ocr' do
         # split_json request.body.read
-        # upload_bitmap
-        # db_update
-        # process_data
+        upload_bitmap
+        db_update
+        process_data
         status 200
         body "file written to S3 storage and json written to database"
       end
