@@ -54,6 +54,7 @@ package
 			
 			// Draw simple linear path (could be improved)
 			this.graphics.moveTo(_last_x, _last_y);
+			this.graphics.lineStyle(20);
 			this.graphics.lineTo(this.mouseX, this.mouseY);
 			
 			_last_x = this.mouseX;

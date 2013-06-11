@@ -40,9 +40,11 @@ module Eq
           Dir.chdir "/tmp"
           Dir.glob("crop*").each do |file|
             puts "Running tesseract on #{file}"
-            %x[tesseract -psm 10 #{file} out nobatch digits]
+            t = %x[tesseract -l eng -psm 10 #{file} out nobatch digits]
+            puts t
             @ocr_json[file] = `cat out.txt`.strip
             @ocr_values << `cat out.txt`.strip
+            puts @ocr_values
           end  
           # puts @ocr_json.sort
           puts @ocr_values.sort
