@@ -5,12 +5,8 @@ class Segmentation
 	include Math
 	include Magick
 
-	MIN_X = 0
-	MAX_X = 1
-	MIN_Y = 2
-	MAX_Y = 3
-
-	REGRESSION = 80 * PI / 180.0
+	# Threshold angle for determining if the centroids of two strokes should be considered above one another.
+	REGRESSION = 60 * PI / 180.0
 
 	# Accepts a 64bit bitmap encoding and associated stroke data, and returns an array of bitmaps to be processed by tesseract
 	def segment bitmap_64, stroke_data, t
@@ -27,42 +23,42 @@ class Segmentation
 			cropped.write("/tmp/crop#{t}_#{index}.png")
 			cropped.write("crop#{t}_#{index}.png")
 		end
-		puts "Done!"
 	end
 
+	# Accepts two strokes and determines if they are part of a fraction by performing a linear regression on their centroids.
 	def is_fraction? stroke1, stroke2
+		# Get centroids for both strokes
 		x1, y1 = centroid(stroke1)
 		x2, y2 = centroid(stroke2)
 		
+		# Handle case where regression is a straight vertical line (avoid division by 0)
 		if x2 - x1 == 0
 			return true
 		end
 
 		slope = (y2 - y1) / (x2 - x1)
-		angle = atan2((y2 - y1) , (x2 - x1))
+		angle = atan2((y2 - y1).abs , (x2 - x1).abs)
 
-		if angle.abs > REGRESSION
+		# Compare angle to epsilon value, if it is larger, the two strokes are "on top" of each other, and belong to a fraction
+		if angle > REGRESSION
 			return true
 		else
 			return false
 		end
 	end
 
+	# Accepts two stroks and determines if they overlap with one another
 	def overlap? stroke1, stroke2
+
+		min_x = 0
+		max_x = 1
+		min_y = 2
+		max_y = 3
 
 		bounds1 = get_bounds stroke1
 		bounds2 = get_bounds stroke2
 
-		#bounds1[MAX_X] - bounds1[MIN_X] * bounds1[MAX_Y] - bounds1[MIN_X]
-
-		if ((bounds1[MAX_X] >= bounds2[MIN_X] && bounds1[MAX_X] <= bounds2[MAX_X]) || (bounds1[MIN_X] >= bounds2[MIN_X] && bounds1[MIN_X] <= bounds2[MAX_X])) &&
-			((bounds1[MAX_Y] >= bounds2[MIN_Y] && bounds1[MAX_Y] <= bounds2[MAX_Y]) || (bounds1[MIN_Y] >= bounds2[MIN_Y] && bounds1[MIN_Y] <= bounds2[MAX_Y]))
-			return true
-		elsif ((bounds2[MIN_X] >= bounds1[MIN_X] && bounds2[MAX_X] <= bounds1[MAX_X]) && (bounds2[MIN_Y] >= bounds1[MIN_Y] && bounds2[MAX_Y] <= bounds1[MAX_Y]))
-			return true
-		elsif ((bounds1[MIN_X] >= bounds2[MIN_X] && bounds1[MAX_X] <= bounds2[MAX_X]) && (bounds1[MIN_Y] <= bounds2[MIN_Y] && bounds1[MAX_Y] >= bounds2[MAX_Y]))
-			return true
-		elsif ((bounds1[MIN_Y] >= bounds2[MIN_Y] && bounds1[MAX_Y] <= bounds2[MAX_Y]) && (bounds1[MIN_X] <= bounds2[MIN_X] && bounds1[MAX_X] >= bounds2[MAX_X]))
+		if (bounds1[max_x] >= bounds2[min_x]) && (bounds1[max_y] >= bounds2[min_y]) && (bounds2[max_x] >= bounds1[min_x]) && (bounds2[max_y] >= bounds1[min_y])
 			return true
 		end
 
@@ -76,9 +72,8 @@ class Segmentation
 		return img[0]
 	end
 
-	# Determines if two strokes are close enough together (in time) to be considered part of the same char. If they are, they are compressed into one stroke.
+	# (Recursive) Determines if two strokes are close enough together (in time) to be considered part of the same char. If they are, they are compressed into one stroke.
 	def compress stroke_data, i=0
-		eps = 500
 
 		if i >= (stroke_data.length-1)
 			return stroke_data
@@ -86,6 +81,7 @@ class Segmentation
 
 		line1 = stroke_data[i]
 		line2 = stroke_data[i+1]
+
 
 		if line1.length <= 3
 			stroke_data.delete_at i
@@ -112,23 +108,6 @@ class Segmentation
 		else
 			return compress stroke_data, i+1
 		end
-
-
-		#if (line2[2] - line1[-1]) < eps
-		#	if i>0
-		#		new_stroke_data = stroke_data[0..i-1]
-		#	else
-		#		new_stroke_data = Array.new
-		#	end
-		#	stroke = line1.concat(line2)
-		#	new_stroke_data << stroke
-		#	if (i+2) < stroke_data.length
-		#		new_stroke_data.concat(stroke_data[i+2..-1])
-		#	end
-		#	return compress new_stroke_data, i
-		#else
-		#	return compress stroke_data, i+1
-		#end
 	end
 
 	# Accepts 4 coordinates defining a rectange, and an image (img)
@@ -140,9 +119,11 @@ class Segmentation
 		return cropped
 	end
 
+	# Determines the centroid for a stroke, returns it in the form [c_x, c_y]
 	def centroid stroke
-		mass = 0
+		# Index is incremented by 3 to handle the stroke data format [x,y,t,x,y,t]
 		i = 3
+		mass = 0
 
 		centroid = Array.new
 		centroid << 0 << 0
@@ -165,6 +146,7 @@ class Segmentation
 		#Centroid = sum(C_i*%mass)
 		centroid[0] /= mass
 		centroid[1] /= mass
+
 		return centroid
 	end
 
@@ -182,18 +164,15 @@ class Segmentation
 
 	# Returns an array of bounds [x_min, x_max, y_min, y_max] for the stroke
 	def get_bounds stroke
-		# 2d array to be returned
-		#all_bounds = Array.new
-
-		#stroke_data.each do |inner_array|
-
-			# Arrays for storing x and y values for the stroke currently being inspected
+		# Arrays for storing x and y values for the stroke currently being inspected
 		xvals = Array.new
 		yvals = Array.new
+
 		stroke.each_slice(3) do |point|
 			xvals.push(point[0])
 			yvals.push(point[1])
 		end
+
 		# A temporary array that stores the min/max x/y for the stroke being inspected
 		bounds = Array.new
 		bounds << xvals.min << xvals.max << yvals.min << yvals.max

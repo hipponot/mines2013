@@ -3,14 +3,9 @@ require './segment'
 
 seg = Segmentation.new
 
-stroke = [0,0,0,2,0,0,2,3,0,0,3,0]
-stroke1 = [1,0,0,1,1,0]
-stroke2 = [0,3,0,1,3,0,2,3,0]
-stroke3 = [1,4,0,1,5,0]
-
-puts "Testing centroid:" + "#{seg.centroid stroke}"
-
-
+# ********************************************
+# segmentation.is_fraction? Testing
+# ********************************************
 if(seg.is_fraction? stroke1, stroke2)
 	print "Testing is fraction:"
 	stroke1.concat stroke2
@@ -19,9 +14,8 @@ else
 	puts "stroke1 and stroke2 not fractions!!!!!!!!"
 end
 
-
 # ********************************************
-# Overlap Testing
+# segmentation.overlap Testing
 # ********************************************
 base_stroke = [2,2,0,5,5,0]
 
