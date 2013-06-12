@@ -37,17 +37,6 @@ package
 		
 		public function MainDisplay()
 		{
-			
-//			this.navigator = new ScreenNavigator();
-//			this.addChild(this.navigator);
-//			this.navigator.addScreen(SPLASH_SCREEN, new ScreenNavigatorItem(SplashScreen));
-//			this.navigator.showScreen(SPLASH_SCREEN);
-//			var splashScreen:SplashScreen = SplashScreen(navigator.activeScreen);
-
-			
-			//this._navigator.addScreen(CANVAS, new ScreenNavigatorItem(this));
-			
-			
 			this.addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
 			setTimeout(init, 500);
 		}
@@ -65,9 +54,20 @@ package
 			Starling.current.nativeStage.addChild(draw_layer);
 			draw_layer.x = draw_layer.y = 20;
 
-//			var sendButton:Button = new (Assets.getTexture("Button1"), "Send");
+			add_buttons();
+			add_labels();
+			
+			status = new TextField(Const.WIDTH, 400, "Canvas not sent: ", "Verdana", 20, Color.WHITE);
+			status.y = draw_layer.x + draw_layer.height + buttonHeight + 2;
+			status.x = draw_layer.x;
+			status.hAlign = HAlign.LEFT;
+			status.vAlign = VAlign.TOP;
+			addChild(status);
+		}
+		
+		private function add_buttons():void 
+		{
 			sendButton = new Button();
-//			sendButton.label = "Send";
 			sendButton.width = buttonWidth;
 			sendButton.height = buttonHeight;
 			sendButton.x = draw_layer.x + Const.WIDTH - buttonWidth;
@@ -75,6 +75,26 @@ package
 			sendButton.addEventListener(Event.TRIGGERED, handle_send);
 			addChild(sendButton);
 
+			clearButton = new Button();
+			clearButton.width = buttonWidth;
+			clearButton.height = buttonHeight;
+			clearButton.x = draw_layer.x;
+			clearButton.y = draw_layer.y + Const.HEIGHT + 2;
+			clearButton.addEventListener(Event.TRIGGERED, handle_clear);
+			addChild(clearButton);
+			
+			loadButton = new Button();
+			loadButton.width = buttonWidth;
+			loadButton.height = buttonHeight;
+			loadButton.x = draw_layer.x + Const.WIDTH/2 - buttonWidth/2;
+			loadButton.y = draw_layer.y + Const.HEIGHT + 2;
+			loadButton.addEventListener(Event.TRIGGERED, handle_load);
+			loadButton.addEventListener(Event.TRIGGERED, button_test);
+			addChild(loadButton);
+		}
+		
+		private function add_labels():void
+		{
 			var sendButtonLabel:TextField = new TextField(buttonWidth, buttonHeight, "Send", "Verdana", 16, Color.BLACK);
 			sendButtonLabel.text = "Send";
 			sendButtonLabel.touchable = false;
@@ -83,14 +103,6 @@ package
 			sendButtonLabel.y = draw_layer.y + Const.HEIGHT + 2;
 			addChild(sendButtonLabel);
 			
-			clearButton = new Button();
-//			clearButton.label = "Clear";
-			clearButton.width = buttonWidth;
-			clearButton.height = buttonHeight;
-			clearButton.x = draw_layer.x;
-			clearButton.y = draw_layer.y + Const.HEIGHT + 2;
-			clearButton.addEventListener(Event.TRIGGERED, handle_clear);
-			addChild(clearButton);
 
 			var clearButtonLabel:TextField = new TextField(buttonWidth, buttonHeight, "Clear", "Verdana", 16, Color.BLACK);
 			clearButtonLabel.text = "Clear";
@@ -100,16 +112,6 @@ package
 			clearButtonLabel.y = draw_layer.y + Const.HEIGHT + 2;
 			addChild(clearButtonLabel);
 			
-			loadButton = new Button();
-			// loadButton.label = "";
-			// loadButton.scaleX = loadButton.scaleY = 1.5;
-			loadButton.width = buttonWidth;
-			loadButton.height = buttonHeight;
-			loadButton.x = draw_layer.x + Const.WIDTH/2 - buttonWidth/2;
-			loadButton.y = draw_layer.y + Const.HEIGHT + 2;
-			loadButton.addEventListener(Event.TRIGGERED, handle_load);
-			loadButton.addEventListener(Event.TRIGGERED, button_test);
-			addChild(loadButton);
 
 			var loadButtonLabel:TextField = new TextField(buttonWidth, buttonHeight, "Load", "Verdana", 16, Color.BLACK);
 			loadButtonLabel.text = "Load";
@@ -118,15 +120,6 @@ package
 			loadButtonLabel.x = draw_layer.x + Const.WIDTH/2 - buttonWidth/2;
 			loadButtonLabel.y = draw_layer.y + Const.HEIGHT + 2;
 			addChild(loadButtonLabel);
-			
-			status = new TextField(Const.WIDTH, 400, "blargh", "Arial", 20, Color.WHITE);
-			status.y = draw_layer.x + draw_layer.height + clearButton.height + 2;
-			status.x = clearButton.x;
-			status.hAlign = HAlign.LEFT;
-			status.vAlign = VAlign.TOP;
-			addChild(status);
-			
-			log("here");
 		}
 		
 		private function button_test(e:Event):void

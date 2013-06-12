@@ -1,26 +1,25 @@
 package
 {
-	import flash.utils.setTimeout;
-	
 	import feathers.controls.Screen;
-	import feathers.controls.ScreenNavigator;
-	import feathers.controls.ScreenNavigatorItem;
+	import starling.text.TextField;
+	import starling.utils.Color;
+	import starling.utils.HAlign;
+	import starling.utils.VAlign;
 	
 	public class SplashScreen extends Screen
 	{
-		private static const CANVAS:String = "canvas";
-		private var navigator:ScreenNavigator;
+		private var status:TextField;
 		
 		public function SplashScreen()
 		{
 			super();
-//			navigator = nav;
-//			setTimeout(addCanvasScreen, 2000, 1);
-		}
-		
-		private function addCanvasScreen():void 
-		{
-			navigator.addScreen(CANVAS, new ScreenNavigatorItem(MainDisplay));
+			
+			status = new TextField(Const.WIDTH+200, 400, "A Better Calculator", "Helvetica", 50, Color.WHITE);
+			status.y = 50;
+			status.x = 50;
+			status.hAlign = HAlign.LEFT;
+			status.vAlign = VAlign.TOP;
+			addChild(status);
 		}
 	}
 }
