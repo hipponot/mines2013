@@ -1,21 +1,18 @@
 package
 {
-	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
-	import flash.text.TextFormat;
 	import flash.utils.setTimeout;
 	
 	import feathers.controls.Button;
 	import feathers.controls.Callout;
 	import feathers.controls.Label;
-	import feathers.controls.text.TextFieldTextRenderer;
+	import feathers.controls.ScreenNavigator;
+	import feathers.controls.ScreenNavigatorItem;
 	import feathers.themes.MetalWorksMobileTheme;
 	
 	import starling.core.Starling;
 	import starling.display.Sprite;
 	import starling.events.Event;
-	import starling.events.TouchEvent;
-	import starling.events.TouchPhase;
 	import starling.text.TextField;
 	import starling.utils.Color;
 	import starling.utils.HAlign;
@@ -30,14 +27,27 @@ package
 		private var theme:MetalWorksMobileTheme;
 		private static const buttonWidth:Number = 75;
 		private static const buttonHeight:Number = 50;
+		private static const SPLASH_SCREEN:String = "splashScreen";
+		private static const CANVAS:String = "canvas";
 		
 		private var clearButton:Button;
 		private var loadButton:Button;
 		private var sendButton:Button;
-		
+		public var navigator:ScreenNavigator;
 		
 		public function MainDisplay()
 		{
+			
+//			this.navigator = new ScreenNavigator();
+//			this.addChild(this.navigator);
+//			this.navigator.addScreen(SPLASH_SCREEN, new ScreenNavigatorItem(SplashScreen));
+//			this.navigator.showScreen(SPLASH_SCREEN);
+//			var splashScreen:SplashScreen = SplashScreen(navigator.activeScreen);
+
+			
+			//this._navigator.addScreen(CANVAS, new ScreenNavigatorItem(this));
+			
+			
 			this.addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
 			setTimeout(init, 500);
 		}
