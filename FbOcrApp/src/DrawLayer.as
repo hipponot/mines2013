@@ -89,7 +89,7 @@ package
 			return bd;
 		}
 		
-		public function set bitmap(bmp:BitmapData)
+		public function set bitmap(bmp:BitmapData):void
 		{
 			this.graphics.beginBitmapFill(bmp);
 			_bitmap = new Bitmap(bmp);

@@ -58,7 +58,7 @@ package
 			add_buttons();
 			add_labels();
 			
-			status = new TextField(Const.WIDTH, 400, "Canvas not sent: ", "Verdana", 20, Color.WHITE);
+			status = new TextField(Const.WIDTH, 400, "Canvas not sent: ", "Verdana", 25, Color.WHITE);
 			status.y = draw_layer.x + draw_layer.height + buttonHeight + 2;
 			status.x = draw_layer.x;
 			status.hAlign = HAlign.LEFT;

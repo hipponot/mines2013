@@ -16,6 +16,8 @@ package
 	import flash.net.URLRequestMethod;
 	import flash.net.URLVariables;
 	import flash.utils.ByteArray;
+	import flash.utils.clearInterval;
+	import flash.utils.setInterval;
 	
 	import mx.utils.Base64Encoder;
 	
@@ -26,10 +28,13 @@ package
 		private var _response_body:String;
 		private var mainDisplay:MainDisplay;
 		private var jsonOutput:Object;
+		private var loadingDots:String;
+		private var dots_timer;
 		
 		public function ServerComm(host:String):void
 		{
 			_host = host;      
+			loadingDots = "Sending Information.";
 		}
 		
 		private function ioErrorHandler(event:IOErrorEvent):void {
@@ -41,6 +46,7 @@ package
 		}
 		
 		private function successHandler(event:Event):void {
+			clearInterval(dots_timer);
 			var loader:URLLoader = event.target as URLLoader;
 			loader.removeEventListener(HTTPStatusEvent.HTTP_STATUS, httpStatusHandler);
 			loader.removeEventListener(Event.COMPLETE, successHandler);
@@ -49,7 +55,7 @@ package
 			_response_status = "200";
 			_response_body = loader.data;
 			
-			MainDisplay.status.text = "Response was: " + _response_status + " Body was: " + _response_body;
+			MainDisplay.status.text = "Output: " + _response_body;
 			jsonOutput = JSON.parse(_response_body);
 		}
 		
@@ -98,7 +104,7 @@ package
 			log("Sending " + strokes_json + " strokes bytes");
 			
 //			MainDisplay.status.text = "Send";
-			MainDisplay.status.text = "Send " + encodedBytes.length + ", response=???";
+//			MainDisplay.status.text = "Send " + encodedBytes.length + ", response=???";
 			
 			var url_request:URLRequest = new URLRequest();
 			var url_params:URLVariables = new URLVariables();
@@ -118,8 +124,21 @@ package
 			loader.dataFormat = URLLoaderDataFormat.BINARY;
 			loader.load(url_request);
 			
-			MainDisplay.status.text = "Information sent: " + png_bytes.length + " : "+ strokes_json.length; 
+//			while (_response_status != "200") {
+			log(loadingDots + "loading dots");
+			dots_timer = setInterval(load_dots, 1000);
+//			}
+			
+			// For debugging now
+			// MainDisplay.status.text = "Information sent: " + png_bytes.length + " : "+ strokes_json.length; 
 		}
+		
+		private function load_dots():void
+		{
+			loadingDots = loadingDots.concat(".");
+			MainDisplay.status.text = loadingDots;
+		}
+		
 		
 		public function load_data():void
 		{
@@ -127,7 +146,6 @@ package
 			var url_params:URLVariables = new URLVariables();
 			url_request.url = "http://localhost:9393/request_bmp";
 			url_request.method = URLRequestMethod.GET;
-//			url_params.filename = filename;
 			url_request.data = url_params;
 			
 			var loader:URLLoader = new URLLoader();
