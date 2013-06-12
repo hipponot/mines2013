@@ -1,12 +1,8 @@
 package
 {
-	import com.adobe.serialization.json.JSON;
-	import com.sociodox.utils.Base64;
-	
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Loader;
-	import flash.display.LoaderInfo;
 	import flash.display.PNGEncoderOptions;
 	import flash.events.Event;
 	import flash.events.HTTPStatusEvent;
@@ -21,10 +17,7 @@ package
 	import flash.net.URLVariables;
 	import flash.utils.ByteArray;
 	
-	import mx.binding.utils.BindingUtils;
 	import mx.utils.Base64Encoder;
-	
-	import org.osmf.elements.ImageLoader;
 	
 	public class ServerComm
 	{
@@ -37,7 +30,6 @@ package
 		public function ServerComm(host:String):void
 		{
 			_host = host;      
-//			mainDisplay = this.
 		}
 		
 		private function ioErrorHandler(event:IOErrorEvent):void {
@@ -53,11 +45,12 @@ package
 			loader.removeEventListener(HTTPStatusEvent.HTTP_STATUS, httpStatusHandler);
 			loader.removeEventListener(Event.COMPLETE, successHandler);
 			loader.removeEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
+
 			_response_status = "200";
 			_response_body = loader.data;
-			MainDisplay.status.text = " Response was: " + _response_status + " Body was: " + _response_body;
+			
+			MainDisplay.status.text = "Response was: " + _response_status + " Body was: " + _response_body;
 			jsonOutput = JSON.parse(_response_body);
-//			log("First element: " + jsonOutput[0] + " :: First element value: " + jsonOutput[0][1] + "Second Element:: " + jsonOutput[2] + " :Second element value : : " + jsonOutput[2][1]);
 		}
 		
 		private function httpStatusHandler(event:HTTPStatusEvent):void {
@@ -70,8 +63,10 @@ package
 			loader.removeEventListener(HTTPStatusEvent.HTTP_STATUS, httpStatusHandler);
 			loader.removeEventListener(Event.COMPLETE, retrieveDataSuccessHandler);
 			loader.removeEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
+		
 			_response_status = "200";
 			_response_body = loader.data;
+			
 			log("Loader data length is: " + _response_body.length);
 			decode_data(_response_body);
 		}

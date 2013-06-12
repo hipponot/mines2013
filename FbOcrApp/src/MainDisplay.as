@@ -25,6 +25,7 @@ package
 		private var _server_comm:ServerComm;
 		public static var status:TextField;
 		private var theme:MetalWorksMobileTheme;
+		
 		private static const buttonWidth:Number = 75;
 		private static const buttonHeight:Number = 50;
 		private static const SPLASH_SCREEN:String = "splashScreen";
@@ -89,7 +90,6 @@ package
 			loadButton.x = draw_layer.x + Const.WIDTH/2 - buttonWidth/2;
 			loadButton.y = draw_layer.y + Const.HEIGHT + 2;
 			loadButton.addEventListener(Event.TRIGGERED, handle_load);
-			loadButton.addEventListener(Event.TRIGGERED, button_test);
 			addChild(loadButton);
 		}
 		

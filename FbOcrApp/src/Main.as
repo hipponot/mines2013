@@ -10,7 +10,6 @@ package
 	import feathers.themes.MetalWorksMobileTheme;
 	
 	import starling.core.Starling;
-	import starling.events.Event;
 	import starling.text.TextField;
 
 //	-source-path="C:/Program Files (x86)/FlashDevelop/Tools/flexsdk/frameworks/locale/{locale}" -keep-all-type-selectors=true
@@ -26,16 +25,13 @@ package
 
 		private static const SPLASH_SCREEN:String = "splashScreen";
 		private static const CANVAS:String = "canvas";
-		private var star:Starling;
+		public static var star:Starling;
 		
 		public function Main():void
 		{
 			this.stage.color = 0x2f2f2f;
 			star = new Starling(SplashScreen, stage);
-			star.addEventListener(starling.events.Event.ADDED_TO_STAGE, addToHandler);
-//			this.theme = new MetalWorksMobileTheme(star.stage);
 			star.start();
-			
 			
 			this.navigator = new ScreenNavigator();
 			star.stage.addChild(this.navigator);
@@ -55,7 +51,7 @@ package
 //			this.theme = new MetalWorksMobileTheme(this.stage);
 		}
 		
-		private function addToHandler(e:starling.events.Event):void 
+		private function addToHandler(e:Event):void 
 		{
 			this.theme = new MetalWorksMobileTheme(star.stage);
 		}

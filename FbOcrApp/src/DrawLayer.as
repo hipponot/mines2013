@@ -2,10 +2,7 @@ package
 {
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
-	import flash.display.Stage;
-	import flash.events.Event;
 	import flash.events.MouseEvent;
-	import flash.utils.getTimer;
 	import flash.display.Bitmap;
 	
 	public class DrawLayer extends Sprite
