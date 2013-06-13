@@ -26,7 +26,7 @@ module Eq
         content_type :json
         status 200
         # body @ocr_json.sort.to_json
-        body @ocr_values.sort.to_s
+        body @ocr_values.to_s
       end
 
       get '/request_bmp' do
@@ -38,16 +38,24 @@ module Eq
 
         def run_ocr
           Dir.chdir "/tmp"
-          Dir.glob("crop*").each do |file|
+          Dir.glob("crop*").sort.each do |file|
             puts "Running tesseract on #{file}"
-            t = %x[tesseract -l eng -psm 10 #{file} out nobatch digits]
+            t = %x[tesseract -l eng+equ -psm 10 #{file} out nobatch digits]
             puts t
             @ocr_json[file] = `cat out.txt`.strip
             @ocr_values << `cat out.txt`.strip
             puts @ocr_values
           end  
+          puts "ocr values to string" + @ocr_values.to_s
+          tmpstr = ""
+          @ocr_values.each do |value|
+            tmpstr << value
+          end
+          eval_value = eval(tmpstr)
+          puts "the eval value: #{eval_value}"
+          @ocr_values << "=#{eval_value}"
           # puts @ocr_json.sort
-          puts @ocr_values.sort
+          puts "ocr values sorted #{@ocr_values.sort}"
         end
 
         def upload_bitmap

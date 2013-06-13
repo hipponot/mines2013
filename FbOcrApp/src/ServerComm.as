@@ -38,6 +38,9 @@ package
 		}
 		
 		private function ioErrorHandler(event:IOErrorEvent):void {
+			clearInterval(dots_timer);
+			loadingDots = "Sending Information.";
+			MainDisplay.status.text = "There was an error! All hands on Deck!!!";
 			var loader:URLLoader = event.target as URLLoader;
 			loader.removeEventListener(HTTPStatusEvent.HTTP_STATUS, httpStatusHandler);
 			loader.removeEventListener(Event.COMPLETE, successHandler);
@@ -47,6 +50,7 @@ package
 		
 		private function successHandler(event:Event):void {
 			clearInterval(dots_timer);
+			loadingDots = "Sending Information.";
 			var loader:URLLoader = event.target as URLLoader;
 			loader.removeEventListener(HTTPStatusEvent.HTTP_STATUS, httpStatusHandler);
 			loader.removeEventListener(Event.COMPLETE, successHandler);
@@ -60,11 +64,14 @@ package
 		}
 		
 		private function httpStatusHandler(event:HTTPStatusEvent):void {
+			clearInterval(dots_timer);
+			loadingDots = "Sending Information.";
 			trace("HTTP status received: " + event.status);
 		}
 		
 		private function retrieveDataSuccessHandler(event:Event):void {
 			log("calling success on data retrieval");
+			
 			var loader:URLLoader = event.target as URLLoader;
 			loader.removeEventListener(HTTPStatusEvent.HTTP_STATUS, httpStatusHandler);
 			loader.removeEventListener(Event.COMPLETE, retrieveDataSuccessHandler);

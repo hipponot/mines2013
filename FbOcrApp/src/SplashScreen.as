@@ -17,11 +17,11 @@ package
 		{
 			super();
 //			this.addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
-			status = new TextField(Const.WIDTH+200, 400, "A Better Calculator", "Helvetica", 50, Color.WHITE);
-			status.y = 50;
-			status.x = 50;
-			status.hAlign = HAlign.LEFT;
-			status.vAlign = VAlign.TOP;
+			status = new TextField(Const.WIDTH, Const.HEIGHT, "A Better Calculator", "Helvetica", 50, Color.WHITE);
+//			status.y = Const.HEIGHT/3;
+//			status.x = 0;
+			status.hAlign = HAlign.CENTER;
+			status.vAlign = VAlign.CENTER;
 			addChild(status);
 		}
 		
