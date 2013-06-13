@@ -39,7 +39,7 @@ module Eq
           values.each_with_index do |symbol, index|
             if !symbol.is_a? String
               file = "/tmp/crop#{@time}_#{index}.png"
-              t = %x[tesseract -l eng+equ -psm 10 #{file} out nobatch digits]
+              t = %x[tesseract -l eng+equ -psm 10 #{file} out ]
               sym_val = `cat out.txt`.strip
               is_digit = true if Float(sym_val) rescue false
 

@@ -10,7 +10,7 @@ package
 	import starling.core.Starling;
 
 //	-source-path="C:/Program Files (x86)/FlashDevelop/Tools/flexsdk/frameworks/locale/{locale}" -keep-all-type-selectors=true
-	[SWF(width="1000", height="1000", frameRate="60", backgroundColor="#002143")]
+	[SWF(width="1000", height="800", frameRate="60", backgroundColor="#002143")]
 	public class Main extends Sprite
 	{
 		public var navigator:ScreenNavigator;
