@@ -41,18 +41,18 @@ module Eq
               file = "/tmp/crop#{@time}_#{index}.png"
               t = %x[tesseract #{file} out -l eng+equ -psm 10 digits]
               sym_val = `cat out.txt`.strip
-              is_digit = true if Float(sym_val) rescue false
+              #is_digit = true if Float(sym_val) rescue false
 
-              if is_digit
-                sym_val += ".0"
-              end
+              # if is_digit
+              #   sym_val += ".0"
+              # end
 
               if `cat out.txt`.strip != ""
                 @ocr_json[file] = sym_val
                 @ocr_values << sym_val
               else
-                @ocr_json[file] = "1.0"
-                @ocr_values << "1.0"
+                @ocr_json[file] = "1"
+                @ocr_values << "1"
               end
 
             else
@@ -76,7 +76,17 @@ module Eq
             tmpstr << value
           end
           puts tmpstr
-          eval_value = eval(tmpstr)
+
+          tmpstr = tmpstr.gsub( "(", "Float(" )
+          puts tmpstr
+
+          begin
+            eval_value = eval(tmpstr)
+          rescue SyntaxError, NameError => invalid
+            eval_value = "Equation can't be evaluated"
+          rescue StandardError => err
+            eval_value = "Equation can't be evaluated"
+          end
           puts "the eval value: #{eval_value}"
           @ocr_values << "=#{eval_value}"
           # puts @ocr_json.sort
