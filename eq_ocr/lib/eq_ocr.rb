@@ -16,7 +16,7 @@ module Eq
 
       post '/ocr' do
         # split_json request.body.read
-        @time = Time.now.strftime "%Y-%m-%d_%H:%M:%S"
+        @time = Time.now.strftime "%Y-%m-%d_%H_%M_%S"
         @ocr_json = {}
         @ocr_values = []
         db_update

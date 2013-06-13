@@ -31,57 +31,11 @@ package
 		private var loadingDots:String;
 		private var dots_timer;
 		
-		public function ServerComm(host:String):void
+		public function ServerComm(host:String, parent:MainDisplay):void
 		{
 			_host = host;      
-			loadingDots = "Sending Information.";
-		}
-		
-		private function ioErrorHandler(event:IOErrorEvent):void {
-			clearInterval(dots_timer);
-			loadingDots = "Sending Information.";
-			MainDisplay.status.text = "There was an error! All hands on Deck!!!";
-			var loader:URLLoader = event.target as URLLoader;
-			loader.removeEventListener(HTTPStatusEvent.HTTP_STATUS, httpStatusHandler);
-			loader.removeEventListener(Event.COMPLETE, successHandler);
-			loader.removeEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
-			trace("error here: " + event.toString());
-		}
-		
-		private function successHandler(event:Event):void {
-			clearInterval(dots_timer);
-			loadingDots = "Sending Information.";
-			var loader:URLLoader = event.target as URLLoader;
-			loader.removeEventListener(HTTPStatusEvent.HTTP_STATUS, httpStatusHandler);
-			loader.removeEventListener(Event.COMPLETE, successHandler);
-			loader.removeEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
-
-			_response_status = "200";
-			_response_body = loader.data;
-			
-			MainDisplay.status.text = "Output: " + _response_body;
-			jsonOutput = JSON.parse(_response_body);
-		}
-		
-		private function httpStatusHandler(event:HTTPStatusEvent):void {
-			clearInterval(dots_timer);
-			loadingDots = "Sending Information.";
-			trace("HTTP status received: " + event.status);
-		}
-		
-		private function retrieveDataSuccessHandler(event:Event):void {
-			log("calling success on data retrieval");
-			
-			var loader:URLLoader = event.target as URLLoader;
-			loader.removeEventListener(HTTPStatusEvent.HTTP_STATUS, httpStatusHandler);
-			loader.removeEventListener(Event.COMPLETE, retrieveDataSuccessHandler);
-			loader.removeEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
-		
-			_response_status = "200";
-			_response_body = loader.data;
-			
-			log("Loader data length is: " + _response_body.length);
-			decode_data(_response_body);
+			loadingDots = "Sending Information .";
+			mainDisplay = parent;
 		}
 		
 		/**
@@ -94,6 +48,8 @@ package
 		public function send_data(bmp:BitmapData,
 								  strokes:Array):void
 		{
+			mainDisplay.touchable = false;
+			
 			// Encode bitmapdata as PNG file (requires Flash 11.3+)
 			var png_bytes:ByteArray = new ByteArray();
 			bmp.encode(new Rectangle(0,0,bmp.width,bmp.height), new PNGEncoderOptions(true), png_bytes);
@@ -101,7 +57,6 @@ package
 			var encoder:Base64Encoder = new Base64Encoder();
 			encoder.encodeBytes(png_bytes);
 			var encodedBytes:String = encoder.toString();
-			
 						
 			// Encode strokes as JSON
 			var strokes_json:String = JSON.stringify(strokes);
@@ -109,9 +64,6 @@ package
 			log("Sending " + encodedBytes.length + " encoded bmp bytes...");
 			log("Sending " + strokes_json.length + " strokes bytes");
 			log("Sending " + strokes_json + " strokes bytes");
-			
-//			MainDisplay.status.text = "Send";
-//			MainDisplay.status.text = "Send " + encodedBytes.length + ", response=???";
 			
 			var url_request:URLRequest = new URLRequest();
 			var url_params:URLVariables = new URLVariables();
@@ -131,10 +83,8 @@ package
 			loader.dataFormat = URLLoaderDataFormat.BINARY;
 			loader.load(url_request);
 			
-//			while (_response_status != "200") {
 			log(loadingDots + "loading dots");
 			dots_timer = setInterval(load_dots, 1000);
-//			}
 			
 			// For debugging now
 			// MainDisplay.status.text = "Information sent: " + png_bytes.length + " : "+ strokes_json.length; 
@@ -145,7 +95,6 @@ package
 			loadingDots = loadingDots.concat(".");
 			MainDisplay.status.text = loadingDots;
 		}
-		
 		
 		public function load_data():void
 		{
@@ -172,7 +121,6 @@ package
 			decoder.decode(response);
 			var _decoded_body:ByteArray = decoder.drain();
 			_decoded_body.position = 0;
-//			log("Decoded body length: " + _decoded_body.length);
 			
 			var imgLoader:Loader = new Loader();
 			imgLoader.loadBytes(_decoded_body);
@@ -192,6 +140,56 @@ package
 			var bmp:BitmapData = image.bitmapData;
 			MainDisplay.draw_layer.bitmap = bmp;
 			log("Finished");
+		}
+		
+		private function ioErrorHandler(event:IOErrorEvent):void {
+			clearInterval(dots_timer);
+			loadingDots = "Sending Information.";
+			MainDisplay.status.text = "There was an error! All hands on Deck!!!";
+			var loader:URLLoader = event.target as URLLoader;
+			loader.removeEventListener(HTTPStatusEvent.HTTP_STATUS, httpStatusHandler);
+			loader.removeEventListener(Event.COMPLETE, successHandler);
+			loader.removeEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
+			trace("error here: " + event.toString());
+			mainDisplay.touchable = true;
+		}
+		
+		private function successHandler(event:Event):void {
+			clearInterval(dots_timer);
+			loadingDots = "Sending Information.";
+			var loader:URLLoader = event.target as URLLoader;
+			loader.removeEventListener(HTTPStatusEvent.HTTP_STATUS, httpStatusHandler);
+			loader.removeEventListener(Event.COMPLETE, successHandler);
+			loader.removeEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
+
+			_response_status = "200";
+			_response_body = loader.data;
+			
+			MainDisplay.status.text = Array(JSON.parse(_response_body)).join(" ").replace(/,/g, "");
+			mainDisplay.touchable = true;
+		}
+		
+		private function httpStatusHandler(event:HTTPStatusEvent):void {
+			clearInterval(dots_timer);
+			loadingDots = "Sending Information.";
+			trace("HTTP status received: " + event.status);
+			mainDisplay.touchable = true;
+		}
+		
+		private function retrieveDataSuccessHandler(event:Event):void {
+			log("calling success on data retrieval");
+			
+			var loader:URLLoader = event.target as URLLoader;
+			loader.removeEventListener(HTTPStatusEvent.HTTP_STATUS, httpStatusHandler);
+			loader.removeEventListener(Event.COMPLETE, retrieveDataSuccessHandler);
+			loader.removeEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
+		
+			_response_status = "200";
+			_response_body = loader.data;
+			
+			log("Loader data length is: " + _response_body.length);
+			decode_data(_response_body);
+			mainDisplay.touchable = true;
 		}
 		
 	}
