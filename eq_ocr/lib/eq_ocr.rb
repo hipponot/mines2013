@@ -21,7 +21,6 @@ module Eq
         @ocr_values = []
         db_update
         process_data
-        run_ocr
         upload_bitmap
         content_type :json
         status 200
@@ -36,21 +35,47 @@ module Eq
 
       helpers do
 
-        def run_ocr
-          Dir.chdir "/tmp"
-          Dir.glob("crop*").sort.each do |file|
-            puts "Running tesseract on #{file}"
-            t = %x[tesseract -l eng+equ -psm 10 #{file} out nobatch digits]
-            puts t
-            @ocr_json[file] = `cat out.txt`.strip
-            @ocr_values << `cat out.txt`.strip
-            puts @ocr_values
-          end  
+        def run_ocr values
+          values.each_with_index do |symbol, index|
+            if !symbol.is_a? String
+              file = "/tmp/crop#{@time}_#{index}.png"
+              t = %x[tesseract -l eng+equ -psm 10 #{file} out nobatch digits]
+              sym_val = `cat out.txt`.strip
+              is_digit = true if Float(sym_val) rescue false
+
+              if is_digit
+                sym_val += ".0"
+              end
+
+              if `cat out.txt`.strip != ""
+                @ocr_json[file] = sym_val
+                @ocr_values << sym_val
+              else
+                @ocr_json[file] = "1.0"
+                @ocr_values << "1.0"
+              end
+
+            else
+              @ocr_values << symbol
+            end
+
+          end
+
+          #Dir.chdir "/tmp"
+          #Dir.glob("crop*").sort.each do |file|
+          #  puts "Running tesseract on #{file}"
+          #  t = %x[tesseract -l eng+equ -psm 10 #{file} out nobatch digits]
+          #  puts t
+          #  @ocr_json[file] = `cat out.txt`.strip
+          #  @ocr_values << `cat out.txt`.strip
+          #  puts @ocr_values
+          #end  
           puts "ocr values to string" + @ocr_values.to_s
           tmpstr = ""
           @ocr_values.each do |value|
             tmpstr << value
           end
+          puts tmpstr
           eval_value = eval(tmpstr)
           puts "the eval value: #{eval_value}"
           @ocr_values << "=#{eval_value}"
@@ -78,7 +103,8 @@ module Eq
         
         def process_data
           seg = Segmentation.new
-          seg.segment(params[:bmp], params[:json], @time)
+          values = seg.segment(params[:bmp], params[:json], @time)
+          run_ocr values
         end
       end
     end

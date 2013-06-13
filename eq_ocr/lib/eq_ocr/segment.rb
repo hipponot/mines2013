@@ -13,17 +13,25 @@ class Segmentation
 		img = bin_to_bmp(bitmap_64)
 
 		#Convert json from string into 2d array
-		stroke_data = eval(stroke_data)
-		stroke_data = compress stroke_data
-		all_bounds = get_all_bounds stroke_data
-		puts (break_down img).length
+		#stroke_data = eval(stroke_data)
+		#stroke_data = compress stroke_data
+		#all_bounds = get_all_bounds stroke_data
+		
+		values = break_down img
 
-		# Create the array of bitmaps to be returned
-		all_bounds.each_with_index do |bounds, index|
-			cropped = crop_image(bounds[0], bounds[1], bounds[2], bounds[3], img)
-			cropped.write("/tmp/crop#{t}_#{index}.png")
-			cropped.write("crop#{t}_#{index}.png")
+		values.each_with_index do |symbol, index|
+			if !symbol.is_a? String
+				symbol.write("/tmp/crop#{t}_#{index}.png")
+				symbol.write("crop#{t}_#{index}.png")
+			end
 		end
+		# Create the array of bitmaps to be returned
+		#all_bounds.each_with_index do |bounds, index|
+		#	cropped = crop_image(bounds[0], bounds[1], bounds[2], bounds[3], img)
+		#	cropped.write("/tmp/crop#{t}_#{index}.png")
+		#	cropped.write("crop#{t}_#{index}.png")
+		#end
+		return values
 	end
 
 	def break_down img, axis=true
