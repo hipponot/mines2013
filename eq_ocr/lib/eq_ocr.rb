@@ -39,20 +39,20 @@ module Eq
           values.each_with_index do |symbol, index|
             if !symbol.is_a? String
               file = "/tmp/crop#{@time}_#{index}.png"
-              t = %x[tesseract -l eng+equ -psm 10 #{file} out ]
+              t = %x[tesseract #{file} out -l eng+equ -psm 10 digits]
               sym_val = `cat out.txt`.strip
-              #is_digit = true if Float(sym_val) rescue false
+              is_digit = true if Float(sym_val) rescue false
 
-              #if is_digit
-              #  sym_val += ".0"
-              #end
+              if is_digit
+                sym_val += ".0"
+              end
 
               if `cat out.txt`.strip != ""
                 @ocr_json[file] = sym_val
                 @ocr_values << sym_val
               else
-                @ocr_json[file] = "1"
-                @ocr_values << "1"
+                @ocr_json[file] = "1.0"
+                @ocr_values << "1.0"
               end
 
             else
@@ -75,27 +75,8 @@ module Eq
           @ocr_values.each do |value|
             tmpstr << value
           end
-
           puts tmpstr
-          count = 0
-
-          #tmpstr.split("").each_with_index do |symbol, index|
-          #`  if symbol == "("
-          #    tmpstr.sub(index, "Float")
-          #    count += 1
-          #  end
-          #end
-
-          tmpstr = tmpstr.sub("(", "Float(")
-          puts tmpstr
-          
-          begin
-            eval_value = eval(tmpstr)
-          rescue SyntaxError, NameError => invalid
-            eval_value = "Equation can't be evaluated"
-          rescue StandardError => err
-            eval_value = "Equation can't be evaluated"
-          end
+          eval_value = eval(tmpstr)
           puts "the eval value: #{eval_value}"
           @ocr_values << "=#{eval_value}"
           # puts @ocr_json.sort
