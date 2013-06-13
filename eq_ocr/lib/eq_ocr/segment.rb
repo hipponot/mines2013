@@ -16,6 +16,7 @@ class Segmentation
 		stroke_data = eval(stroke_data)
 		stroke_data = compress stroke_data
 		all_bounds = get_all_bounds stroke_data
+		puts (break_down img).length
 
 		# Create the array of bitmaps to be returned
 		all_bounds.each_with_index do |bounds, index|
@@ -23,6 +24,95 @@ class Segmentation
 			cropped.write("/tmp/crop#{t}_#{index}.png")
 			cropped.write("crop#{t}_#{index}.png")
 		end
+	end
+
+	def break_down img, axis=true
+		segments = Array.new
+		sub_imgs = line_seg img, axis
+		#puts sub_imgs.length
+
+		if axis
+			sub_imgs.each do |sub_img|
+				segments += (break_down sub_img, !axis)
+			end
+		else
+			if sub_imgs.length <= 1
+				return [img]
+			end
+			segments += (break_down sub_imgs[0], !axis)
+			1.step(sub_imgs.length-2,2) do |i|
+				segments = ["("] + segments + [")"] + ["/"] + ["("] + (break_down sub_imgs[i+1], !axis) + [")"]
+			end
+		end
+
+		return segments
+	end
+
+	## Offline segmentation using a single dimmension
+	## Ex: Horz segmentation looks at each col to determine where segs start and stop
+	## The sections are split and stored in an array of sub-images
+	def line_seg img, axis
+		sub_img = Array.new
+		width = img.columns
+		height = img.rows
+		## dx, dy determine how far to scan the image
+		## w, h, determine the size of the col/row
+		if axis
+			dx=width-1
+			dy=0
+			w=1
+			h=height
+		else
+			dx=0
+			dy=height-1
+			w=width
+			h=1
+		end
+
+		## space is a flag that denotes the col/row is not part of a sub-image
+		## start is the staring left-most/top-most edge of the sub-image
+		space = true
+		empty = true
+		start = 0
+		(0..dx).each do |x|
+			(0..dy).each do |y|
+				## Creates an array of pixels that comprise a row/col
+				line = img.get_pixels(x,y,w,h)
+				## empty is a flag denoting a col/row with no black pixels
+				## ADD: If you have a different color pen just check that at least one pixel is not white
+				empty=true
+				line.each do |pixel|
+					## Pixel intesity is a value from 0 to 255 denoting how bright a pixel is (255=white)
+					if pixel.intensity() == 0
+						empty = false
+						break
+					end
+				end
+				## If a new sub-image has been hit
+				if !empty && space
+					space = false
+					start = axis ? x : y
+				## If a sub-image is complete
+				elsif empty && !space
+					space = true
+					if axis
+						sub_img << crop_image(start, x, dy, h, img)
+					else
+						sub_img << crop_image(dx, w, start, y, img)
+					end
+				end
+			end
+		end
+
+		if !empty && !space
+			if axis
+				sub_img << crop_image(start, dx, dy, h, img)
+			else
+				sub_img << crop_image(dx, w, start, dy, img)
+			end
+		end
+
+		return sub_img
 	end
 
 	# Accepts two strokes and determines if they are part of a fraction by performing a linear regression on their centroids.
