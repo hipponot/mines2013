@@ -1,0 +1,11 @@
+<html>
+  <body>
+    <div>
+      <% Dir.glob("*.png").each do |image| %>
+      <%= puts image %>
+      <%= "<img src=\"#{image}\" >" %>
+      <% end %>
+    </div>
+  </body>
+</html>
+

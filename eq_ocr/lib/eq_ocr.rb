@@ -33,10 +33,15 @@ module Eq
         s3.get_file params[:filename]
       end
 
+      get '/show_ocr' do
+        Dir.chdir "../lib/public"
+        erb :images
+      end
+
       helpers do
 
-        def run_ocr values
-          values.each_with_index do |symbol, index|
+        def run_ocr 
+          @values.each_with_index do |symbol, index|
             if !symbol.is_a? String
               file = "/tmp/crop#{@time}_#{index}.png"
               t = %x[tesseract #{file} out -l eng+equ -psm 10 digits]
@@ -113,8 +118,8 @@ module Eq
         
         def process_data
           seg = Segmentation.new
-          values = seg.segment(params[:bmp], params[:json], @time)
-          run_ocr values
+          @values = seg.segment(params[:bmp], params[:json], @time)
+          run_ocr 
         end
       end
     end

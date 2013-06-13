@@ -22,7 +22,7 @@ class Segmentation
 		values.each_with_index do |symbol, index|
 			if !symbol.is_a? String
 				symbol.write("/tmp/crop#{t}_#{index}.png")
-				symbol.write("crop#{t}_#{index}.png")
+				symbol.write("../lib/public/crop#{t}_#{index}.png")
 			end
 		end
 		# Create the array of bitmaps to be returned
