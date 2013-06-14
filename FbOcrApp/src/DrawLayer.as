@@ -23,7 +23,11 @@ package
 			// Mouse and single-touch point are equivalent
 			this.addEventListener(MouseEvent.MOUSE_DOWN, handle_start_stroke);
 		}
-		
+	
+		/*Where the stroke data begins to be gathered,
+			current stroke being stored in an array
+			before moving on to handling in handle_move().
+		*/
 		private function handle_start_stroke(e:MouseEvent):void
 		{
 			_last_x = this.mouseX;
@@ -35,6 +39,10 @@ package
 			this.addEventListener(MouseEvent.MOUSE_MOVE, handle_move);
 		}
 		
+		/*Where the stroke data stops being gathered,
+			the listeners are feed up again, and the
+			strokes are pushed to current stroke array.
+		*/
 		private function handle_end_stroke(e:MouseEvent):void
 		{
 			this.stage.removeEventListener(MouseEvent.MOUSE_UP, handle_end_stroke);
@@ -42,6 +50,10 @@ package
 			_strokes.push(_cur_stroke);
 		}
 		
+		/*Collects all stroke data between the beginning and
+			ending of the stroke, collecting position and
+			time of each point within the stroke.
+		*/
 		private function handle_move(e:MouseEvent):void
 		{
 			// Store point x, y, t
@@ -58,6 +70,7 @@ package
 			_last_y = this.mouseY;
 		}
 		
+		//Clears any strokes from the canvas
 		public function clear():void
 		{
 			_strokes = [];
@@ -77,11 +90,13 @@ package
 			}
 		}
 		
+		//Returns any strokes.
 		public function get strokes():Array
 		{
 			return _strokes;
 		}
 		
+		//Returns any bitmap data.
 		public function get bitmap():BitmapData
 		{
 			var bd:BitmapData = new BitmapData(Const.WIDTH,Const.HEIGHT, false, 0xffffff);
@@ -89,6 +104,7 @@ package
 			return bd;
 		}
 		
+		//Sets bitmap data drawn (used for loading).
 		public function set bitmap(bmp:BitmapData):void
 		{
 			this.graphics.beginBitmapFill(bmp);

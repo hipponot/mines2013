@@ -1,3 +1,5 @@
+//Sets constants for canvas size
+
 package
 {
 	public class Const

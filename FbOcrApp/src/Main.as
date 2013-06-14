@@ -19,6 +19,11 @@ package
 		private static const CANVAS:String = "canvas";
 		public static var star:Starling;
 		
+		/*Starts up the application with a splash screen
+			which shows a simple title and background
+			for a few seconds before moving onto the drawing
+			canvas.
+		*/ 
 		public function Main():void
 		{
 			this.stage.color = 0x2f2f2f;
@@ -31,8 +36,7 @@ package
 			navigator.addScreen(CANVAS, new ScreenNavigatorItem(MainDisplay));
 
 			this.navigator.showScreen(SPLASH_SCREEN);
-//			var splashScreen:SplashScreen = SplashScreen(navigator.activeScreen);
-			
+						
 			setTimeout(function addCanvasScreen():void {navigator.showScreen(CANVAS)}, 1000, 1);
 		}
 	}
