@@ -10,105 +10,43 @@ module Eq
   module Ocr 
     class Service < Sinatra::Base
       include Mongo
+
+      ## Website for showing all of the currently OCR'ed segmented images
       get '/' do
-        "<form action=\"/upload_bitmap\" method=\"post\"><input type=\"text\" name=\"something\"><input type=\"submit\" value=\"submit\"></form>"
+        Dir.chdir "../lib/public"
+        erb :images
       end
 
+      ## Completes all of the OCR steps
       post '/ocr' do
-        # split_json request.body.read
+        # set a global Time variable for using in storage of segmented bitmaps, data retrieval, and more
         @time = Time.now.strftime "%Y-%m-%d_%H_%M_%S"
-        @ocr_json = {}
         @ocr_values = []
+
+        ## call the steps
         db_update
         process_data
         upload_bitmap
+
+        ## return to the app
         content_type :json
         status 200
-        # body @ocr_json.sort.to_json
         body @ocr_values.to_s
       end
 
+      ## used for returning the last image sent
+      ## I'm not sure if this even works any more 
+      ## because we segment before sending to the S3 now
       get '/request_bmp' do
         s3 = AwsInstance.new
         s3.get_file params[:filename]
       end
 
-      get '/show_ocr' do
-        Dir.chdir "../lib/public"
-        erb :images
-      end
-
+      ## all of the helper methods
       helpers do
 
-        def run_ocr 
-          @values.each_with_index do |symbol, index|
-            if !symbol.is_a? String
-              file = "/tmp/crop#{@time}_#{index}.png"
-              t = %x[tesseract #{file} out -l eng+equ -psm 10 digits]
-              sym_val = `cat out.txt`.strip
-              #is_digit = true if Float(sym_val) rescue false
-
-              # if is_digit
-              #   sym_val += ".0"
-              # end
-
-              if `cat out.txt`.strip != ""
-                @ocr_json[file] = sym_val
-                @ocr_values << sym_val
-              else
-                @ocr_json[file] = "1"
-                @ocr_values << "1"
-              end
-
-            else
-              @ocr_values << symbol
-            end
-
-          end
-
-          #Dir.chdir "/tmp"
-          #Dir.glob("crop*").sort.each do |file|
-          #  puts "Running tesseract on #{file}"
-          #  t = %x[tesseract -l eng+equ -psm 10 #{file} out nobatch digits]
-          #  puts t
-          #  @ocr_json[file] = `cat out.txt`.strip
-          #  @ocr_values << `cat out.txt`.strip
-          #  puts @ocr_values
-          #end  
-          puts "ocr values to string" + @ocr_values.to_s
-          tmpstr = ""
-          @ocr_values.each do |value|
-            tmpstr << value
-          end
-          puts tmpstr
-
-          tmpstr = tmpstr.gsub( "(", "Float(" )
-          puts tmpstr
-
-          begin
-            eval_value = eval(tmpstr)
-          rescue SyntaxError, NameError => invalid
-            eval_value = "Equation can't be evaluated"
-          rescue StandardError => err
-            eval_value = "Equation can't be evaluated"
-          end
-          puts "the eval value: #{eval_value}"
-          @ocr_values << "=#{eval_value}"
-          # puts @ocr_json.sort
-          puts "ocr values sorted #{@ocr_values.sort}"
-        end
-
-        def upload_bitmap
-          s3 = AwsInstance.new
-          #File.open("/tmp/#{@time}", 'wb') { |f| f.write(params[:bmp])}
-          #s3.upload_file "/tmp/#{@time}", @time
-          #Dir.glob(/^(\/tmp\/crop#{@time}\_\d*)$/).each_with_index do |filename, i|
-          Dir.glob("/tmp/crop*").each_with_index do |filename, i|
-            s3.upload_file "#{filename}", "crop#{@time}_#{i}"
-            File.delete filename
-          end
-        end
-        
+        ## send the JSON to the database
+        ## the JSON is not used for anything yet
         def db_update
           @client = MongoClient.new('localhost', 27017)
           @db     = @client['handwriting-data']
@@ -116,10 +54,62 @@ module Eq
           @coll.insert({'json' => params[:json]})
         end
         
+        ## the actual segmentation begins here
+        ## after segmentation each of the names 
+        ## is returned and then the ocr is run
         def process_data
           seg = Segmentation.new
           @values = seg.segment(params[:bmp], params[:json], @time)
           run_ocr 
+        end
+        
+        ## this runs the actual tesseract code on each part of the segmented image
+        def run_ocr 
+          @values.each_with_index do |symbol, index|
+            if !symbol.is_a? String
+              file = "/tmp/crop#{@time}_#{index}.png"
+              t = %x[tesseract #{file} out -l eng+equ -psm 10 digits]
+              sym_val = `cat out.txt`.strip
+
+              @ocr_values << (sym_val.empty? ? "?" : sym_val) ## ? if empty, the value if it isn't!
+            else
+              @ocr_values << symbol
+            end
+          end
+
+          ## create a temporary string so that we can add Float() around the parts that are doing integer division
+          ## we do not do this in the segment because it would then display it on the app screen
+          tmpstr = ""
+          @ocr_values.each { |value| tmpstr << value }
+          tmpstr.gsub!( "(", "Float(" )
+
+          ## rescue if eval fails
+          begin
+            eval_value = eval(tmpstr)
+          rescue SyntaxError, NameError => invalid
+            eval_value = "Equation can't be evaluated"
+          rescue StandardError => err
+            eval_value = "Equation can't be evaluated"
+          end
+
+          @ocr_values << "= #{sprintf("%g", eval_value)}" ## pretty up the text. This removes the .0 at the end of a whole number
+
+          ## debugging
+          puts "ocr values to string:" + @ocr_values.join("")
+          puts tmpstr
+          puts "the eval value: #{eval_value}"
+        end
+
+        ## this uploads the bitmaps to the S3 server
+        ## it looks in the tmp folder and then for each 
+        ## crop{DATE}_{TIME}_{INDEX} file it will upload 
+        ## it to the server and then delete it from /tmp/
+        def upload_bitmap
+          s3 = AwsInstance.new
+          Dir.glob("/tmp/crop*").each_with_index do |filename, i|
+            s3.upload_file "#{filename}", "crop#{@time}_#{i}"
+            File.delete filename
+          end
         end
       end
     end
