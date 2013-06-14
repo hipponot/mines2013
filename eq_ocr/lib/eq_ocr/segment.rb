@@ -40,13 +40,9 @@ class Segmentation
 		#puts sub_imgs.length
 
 		if axis
-			sub_imgs.each do |sub_img|
-				segments += (break_down sub_img, !axis)
-			end
+			sub_imgs.each { |sub_img| segments += (break_down sub_img, !axis) }
 		else
-			if sub_imgs.length <= 1
-				return [img]
-			end
+			return [img] if sub_imgs.length <= 1
 			segments += (break_down sub_imgs[0], !axis)
 			1.step(sub_imgs.length-2,2) do |i|
 				segments = ["("] + segments + [")"] + ["/"] + ["("] + (break_down sub_imgs[i+1], !axis) + [")"]
@@ -66,15 +62,15 @@ class Segmentation
 		## dx, dy determine how far to scan the image
 		## w, h, determine the size of the col/row
 		if axis
-			dx=width-1
-			dy=0
-			w=1
-			h=height
+			dx = width-1
+			dy = 0
+			w  = 1
+			h  = height
 		else
-			dx=0
-			dy=height-1
-			w=width
-			h=1
+			dx = 0
+			dy = height-1
+			w  = width
+			h  = 1
 		end
 
 		## space is a flag that denotes the col/row is not part of a sub-image
@@ -85,10 +81,10 @@ class Segmentation
 		(0..dx).each do |x|
 			(0..dy).each do |y|
 				## Creates an array of pixels that comprise a row/col
-				line = img.get_pixels(x,y,w,h)
+				line = img.get_pixels(x, y, w, h)
 				## empty is a flag denoting a col/row with no black pixels
 				## ADD: If you have a different color pen just check that at least one pixel is not white
-				empty=true
+				empty = true
 				line.each do |pixel|
 					## Pixel intesity is a value from 0 to 255 denoting how bright a pixel is (255=white)
 					if pixel.intensity() == 0
@@ -96,6 +92,7 @@ class Segmentation
 						break
 					end
 				end
+
 				## If a new sub-image has been hit
 				if !empty && space
 					space = false
@@ -130,19 +127,13 @@ class Segmentation
 		x2, y2 = centroid(stroke2)
 		
 		# Handle case where regression is a straight vertical line (avoid division by 0)
-		if x2 - x1 == 0
-			return true
-		end
+		return true if x2 - x1 == 0
 
 		slope = (y2 - y1) / (x2 - x1)
 		angle = atan2((y2 - y1).abs , (x2 - x1).abs)
 
 		# Compare angle to epsilon value, if it is larger, the two strokes are "on top" of each other, and belong to a fraction
-		if angle > REGRESSION
-			return true
-		else
-			return false
-		end
+		angle > REGRESSION ? true : false 
 	end
 
 	# Accepts two stroks and determines if they overlap with one another
@@ -156,9 +147,7 @@ class Segmentation
 		bounds1 = get_bounds stroke1
 		bounds2 = get_bounds stroke2
 
-		if (bounds1[max_x] >= bounds2[min_x]) && (bounds1[max_y] >= bounds2[min_y]) && (bounds2[max_x] >= bounds1[min_x]) && (bounds2[max_y] >= bounds1[min_y])
-			return true
-		end
+		return true if (bounds1[max_x] >= bounds2[min_x]) && (bounds1[max_y] >= bounds2[min_y]) && (bounds2[max_x] >= bounds1[min_x]) && (bounds2[max_y] >= bounds1[min_y])
 
 		return false
 	end
@@ -173,13 +162,10 @@ class Segmentation
 	# (Recursive) Determines if two strokes are close enough together (in time) to be considered part of the same char. If they are, they are compressed into one stroke.
 	def compress stroke_data, i=0
 
-		if i >= (stroke_data.length-1)
-			return stroke_data
-		end
+		return stroke_data if i >= (stroke_data.length-1)
 
 		line1 = stroke_data[i]
 		line2 = stroke_data[i+1]
-
 
 		if line1.length <= 3
 			stroke_data.delete_at i
@@ -192,11 +178,8 @@ class Segmentation
 		end
 
 		if (is_fraction? line1, line2) || (overlap? line1, line2)
-			if i>0
-				new_stroke_data = stroke_data[0..i-1]
-			else
-				new_stroke_data = Array.new
-			end
+			new_stroke_data = i > 0 ? stroke_data[0..i-1] : Array.new
+			
 			stroke = line1.concat(line2)
 			new_stroke_data << stroke
 			if (i+2) < stroke_data.length
@@ -253,9 +236,7 @@ class Segmentation
 	def get_all_bounds stroke_data
 		all_bounds = Array.new
 
-		stroke_data.each do |inner_array|
-			all_bounds << get_bounds(inner_array)
-		end
+		stroke_data.each { |inner_array| all_bounds << get_bounds(inner_array) }
 
 		return all_bounds
 	end
