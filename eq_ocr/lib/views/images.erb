@@ -3,7 +3,7 @@
     <div>
       <% Dir.glob("*.png").each do |image| %>
       <%= puts image %>
-      <%= "<img src=\"#{image}\" >" %>
+      <%= "<img src=\"#{image}\" style=\"border-style:solid; border-radius: 3px;\" >" %>
       <% end %>
     </div>
   </body>

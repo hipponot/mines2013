@@ -69,7 +69,7 @@ package
 			this.graphics.endFill();
 			
 			// Setup stroke style (const width, color)
-			this.graphics.lineStyle(1, 0x222222);
+			this.graphics.lineStyle(9, 0x222222);
 			if (this.contains(_bitmap)) 
 			{
 				removeChild(_bitmap);

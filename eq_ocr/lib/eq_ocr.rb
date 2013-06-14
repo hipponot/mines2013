@@ -91,13 +91,14 @@ module Eq
           rescue StandardError => err
             eval_value = "Equation can't be evaluated"
           end
-
-          @ocr_values << "= #{sprintf("%g", eval_value)}" ## pretty up the text. This removes the .0 at the end of a whole number
-
+          
           ## debugging
           puts "ocr values to string:" + @ocr_values.join("")
           puts tmpstr
           puts "the eval value: #{eval_value}"
+
+          @ocr_values << "= #{sprintf("%g", eval_value)}" ## pretty up the text. This removes the .0 at the end of a whole number
+
         end
 
         ## this uploads the bitmaps to the S3 server
