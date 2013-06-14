@@ -63,7 +63,7 @@ package
 			
 			// Draw simple linear path (could be improved)
 			this.graphics.moveTo(_last_x, _last_y);
-			this.graphics.lineStyle(20);
+			this.graphics.lineStyle(10);
 			this.graphics.lineTo(this.mouseX, this.mouseY);
 			
 			_last_x = this.mouseX;
@@ -82,7 +82,7 @@ package
 			this.graphics.endFill();
 			
 			// Setup stroke style (const width, color)
-			this.graphics.lineStyle(3, 0x222222);
+			this.graphics.lineStyle(1, 0x222222);
 			if (this.contains(_bitmap)) 
 			{
 				removeChild(_bitmap);

@@ -20,3 +20,5 @@ bin-debug/
 .actionScriptProperties
 eq_ocr/lib/buckets/handwriting
  /vagrant/Tesseract/leptonica-1.69/
+eq_ocr/config/crop*
+eq_ocr/lib/public/crop*

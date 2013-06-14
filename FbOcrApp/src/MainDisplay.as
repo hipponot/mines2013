@@ -20,7 +20,6 @@ package
 	
 	public class MainDisplay extends Sprite
 	{
-		private var mStarling:Starling;
 		public static var draw_layer:DrawLayer;
 		private var _server_comm:ServerComm;
 		public static var status:TextField;
@@ -49,7 +48,7 @@ package
 		
 		private function init():void
 		{
-			_server_comm = new ServerComm("localhost");
+			_server_comm = new ServerComm("localhost", this);
 			draw_layer = new DrawLayer();
 			draw_layer.scrollRect = new Rectangle(0,0,Const.WIDTH,Const.HEIGHT);
 			Starling.current.nativeStage.addChild(draw_layer);
@@ -83,14 +82,14 @@ package
 			clearButton.y = draw_layer.y + Const.HEIGHT + 2;
 			clearButton.addEventListener(Event.TRIGGERED, handle_clear);
 			addChild(clearButton);
-			
-			loadButton = new Button();
-			loadButton.width = buttonWidth;
-			loadButton.height = buttonHeight;
-			loadButton.x = draw_layer.x + Const.WIDTH/2 - buttonWidth/2;
-			loadButton.y = draw_layer.y + Const.HEIGHT + 2;
-			loadButton.addEventListener(Event.TRIGGERED, handle_load);
-			addChild(loadButton);
+//			
+//			loadButton = new Button();
+//			loadButton.width = buttonWidth;
+//			loadButton.height = buttonHeight;
+//			loadButton.x = draw_layer.x + Const.WIDTH/2 - buttonWidth/2;
+//			loadButton.y = draw_layer.y + Const.HEIGHT + 2;
+//			loadButton.addEventListener(Event.TRIGGERED, handle_load);
+//			addChild(loadButton);
 		}
 		
 		private function add_labels():void
@@ -113,13 +112,13 @@ package
 			addChild(clearButtonLabel);
 			
 
-			var loadButtonLabel:TextField = new TextField(buttonWidth, buttonHeight, "Load", "Verdana", 16, Color.BLACK);
-			loadButtonLabel.text = "Load";
-			loadButtonLabel.touchable = false;
-			loadButtonLabel.border = true;
-			loadButtonLabel.x = draw_layer.x + Const.WIDTH/2 - buttonWidth/2;
-			loadButtonLabel.y = draw_layer.y + Const.HEIGHT + 2;
-			addChild(loadButtonLabel);
+//			var loadButtonLabel:TextField = new TextField(buttonWidth, buttonHeight, "Load", "Verdana", 16, Color.BLACK);
+//			loadButtonLabel.text = "Load";
+//			loadButtonLabel.touchable = false;
+//			loadButtonLabel.border = true;
+//			loadButtonLabel.x = draw_layer.x + Const.WIDTH/2 - buttonWidth/2;
+//			loadButtonLabel.y = draw_layer.y + Const.HEIGHT + 2;
+//			addChild(loadButtonLabel);
 		}
 		
 		private function button_test(e:Event):void
@@ -143,11 +142,11 @@ package
 			draw_layer.clear();
 		}
 		
-		private function handle_load(e:Event):void
-		{
-			log("load");
-			_server_comm.load_data();
-		}
+//		private function handle_load(e:Event):void
+//		{
+//			log("load");
+//			_server_comm.load_data();
+//		}
 
 
 	}
