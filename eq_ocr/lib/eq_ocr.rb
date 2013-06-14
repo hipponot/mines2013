@@ -82,6 +82,9 @@ module Eq
           tmpstr = ""
           @ocr_values.each { |value| tmpstr << value }
           tmpstr.gsub!( "(", "Float(" )
+          tmpstr.gsub!( "=", "==" )
+          tmpstr.gsub!( "x", "*" )
+          tmpstr.gsub!( "X", "*" )
 
           ## rescue if eval fails
           begin

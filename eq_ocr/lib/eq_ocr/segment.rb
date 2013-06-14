@@ -43,6 +43,7 @@ class Segmentation
 			sub_imgs.each { |sub_img| segments += (break_down sub_img, !axis) }
 		else
 			return [img] if sub_imgs.length <= 1
+			return ["="] if sub_imgs.length == 2
 			segments += (break_down sub_imgs[0], !axis)
 			1.step(sub_imgs.length-2,2) do |i|
 				segments = ["("] + segments + [")"] + ["/"] + ["("] + (break_down sub_imgs[i+1], !axis) + [")"]
