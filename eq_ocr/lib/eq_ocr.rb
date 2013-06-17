@@ -48,6 +48,7 @@ module Eq
         ## send the JSON to the database
         ## the JSON is not used for anything yet
         def db_update
+          puts params[:json]
           @client = MongoClient.new('localhost', 27017)
           @db     = @client['handwriting-data']
           @coll   = @db['json-bmp']
@@ -96,9 +97,11 @@ module Eq
           puts "ocr values to string:" + @ocr_values.join("")
           puts tmpstr
           puts "the eval value: #{eval_value}"
-
-          @ocr_values << "= #{sprintf("%g", eval_value)}" ## pretty up the text. This removes the .0 at the end of a whole number
-
+          if eval_value.is_a? Fixnum
+            @ocr_values << "= #{sprintf("%g", eval_value)}" ## pretty up the text. This removes the .0 at the end of a whole number
+          else 
+            @ocr_values << "= #{eval_value}"
+          end
         end
 
         ## this uploads the bitmaps to the S3 server
